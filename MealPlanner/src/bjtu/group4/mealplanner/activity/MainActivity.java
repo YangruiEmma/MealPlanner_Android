@@ -1,8 +1,6 @@
 package bjtu.group4.mealplanner.activity;
 
 import bjtu.group4.mealplanner.R;
-import bjtu.group4.mealplanner.R.layout;
-import bjtu.group4.mealplanner.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;

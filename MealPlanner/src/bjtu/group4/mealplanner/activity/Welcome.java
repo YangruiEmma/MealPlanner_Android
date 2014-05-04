@@ -1,7 +1,6 @@
 package bjtu.group4.mealplanner.activity;
 
 import bjtu.group4.mealplanner.R;
-import bjtu.group4.mealplanner.utils.ConnectServer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;

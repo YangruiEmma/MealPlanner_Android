@@ -28,7 +28,7 @@ public class Login extends Activity {
 	private EditText password;
 	private Button btnLogin;
 	private Button btnRegist;
-	private Button btnSee;
+	//private Button btnSee;
 	private ProgressDialog progress;
 
 	@Override
@@ -42,6 +42,7 @@ public class Login extends Activity {
 		setListeners();
 	}
 
+	@SuppressLint("WorldReadableFiles")
 	private void bindViews() {
 		username=(EditText)this.findViewById(R.id.username);
 		password=(EditText)this.findViewById(R.id.password);
@@ -49,7 +50,8 @@ public class Login extends Activity {
 		btnRegist=(Button)this.findViewById(R.id.btnRegist);
 
 		//从SharedPreferences中获得用户上一次输入的用户名和密码
-        SharedPreferences shared = this.getSharedPreferences("user_info",  Context.MODE_WORLD_READABLE);
+        @SuppressWarnings("deprecation")
+		SharedPreferences shared = this.getSharedPreferences("user_info",  Context.MODE_WORLD_READABLE);
         String name = shared.getString("username", "");
         String pass = shared.getString("password", "");
         //设置界面上的用户名和密码
