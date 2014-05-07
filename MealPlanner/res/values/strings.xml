@@ -12,5 +12,7 @@
     <string name="lineUp">排排队</string>
     <string name="myInfo">我的</string>
     <string name="oderSeat">在线订座</string>
+    <string name="title_activity_beam">Beam</string>
+    <string name="info">扫描中。。。</string>  
 
 </resources>
