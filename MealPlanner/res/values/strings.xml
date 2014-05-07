@@ -6,5 +6,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_restinfo">RestaurantInfo</string>
+    <string name="startPage">首页</string>
+    <string name="planMeal">组饭局</string>
+    <string name="lineUp">排排队</string>
+    <string name="myInfo">我的</string>
+    <string name="oderSeat">在线订座</string>
 
 </resources>

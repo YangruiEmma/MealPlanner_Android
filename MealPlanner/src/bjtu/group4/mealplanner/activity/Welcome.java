@@ -68,7 +68,8 @@ public class Welcome extends Activity {
 
 	public void toLogin() {		
 		Intent it=new Intent();//实例化Intent
-		it.setClass(Welcome.this, Login.class);//设置Class
+		//it.setClass(Welcome.this, Login.class);//设置Class
+		it.setClass(Welcome.this, MainActivity.class);//设置Class
 		startActivity(it);//启动Activity
 		Welcome.this.finish();//结束Welcome Activity
 	}
