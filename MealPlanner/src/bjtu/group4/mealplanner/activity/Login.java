@@ -58,6 +58,7 @@ public class Login extends Activity {
         username.setText(name);
         password.setText(pass);
         
+        //自动登录代码
 //        if(shared.getBoolean("auto", false)){
 //        	//向SharedData静态类中写数据
 //			SharedData.USERID = shared.getInt("userId", 0);
@@ -168,6 +169,9 @@ public class Login extends Activity {
 				SharedData.GENDER = user.getGender();
 				SharedData.EMAIL = user.getEmail();
 				
+				//Application 记录登录状态
+				MealApplication application = (MealApplication) getApplication();
+				application.setIsLogin(true);
 				
 				return new Integer(1);
 			}else{

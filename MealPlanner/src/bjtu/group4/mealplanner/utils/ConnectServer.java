@@ -112,6 +112,35 @@ public class ConnectServer {
 		return restaurants;
 	}
 	
+
+	public Restaurant getRestInfo(String restID) {
+		Restaurant rest = null;
+		String url = path + "app/rest/getRest?";
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("restId", restID);
+		String str = HttpUtils.postData(url, map);
+		
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				JSONObject restInfo = (JSONObject) obj
+						.getJSONObject("data");
+
+				rest = new Restaurant();
+				rest.setId(restInfo.getInt("restid"));
+				rest.setName(restInfo.getString("restname"));
+				rest.setPhoneNum(restInfo.getString("restphone"));
+				rest.setCity(restInfo.getInt("restcity"));
+				rest.setPosition(restInfo.getString("restaddress"));
+				rest.setRestType(restInfo.getInt("resttype"));
+				rest.setIsHot(restInfo.getInt("hot"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rest;
+	}
+	
 	public String test() {
 		String url = path + "userinfo?";
 		Map<String, String> map = new HashMap<String, String>();
