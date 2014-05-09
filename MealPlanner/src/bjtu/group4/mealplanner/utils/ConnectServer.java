@@ -16,7 +16,7 @@ import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
 	//public static String path = "http://59.64.4.63:8080/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
-	public static String path = "http://172.28.9.168:8080/mealplanner/";
+	public static String path = "http://172.28.32.75:8080/mealplanner/";
 	/**
 	 * ÓÃ»§µÇÂ¼
 	 * 
@@ -111,6 +111,35 @@ public class ConnectServer {
 		return restaurants;
 	}
 	
+
+	public Restaurant getRestInfo(String restID) {
+		Restaurant rest = null;
+		String url = path + "app/rest/getRest?";
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("restId", restID);
+		String str = HttpUtils.postData(url, map);
+		
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				JSONObject restInfo = (JSONObject) obj
+						.getJSONObject("data");
+
+				rest = new Restaurant();
+				rest.setId(restInfo.getInt("restid"));
+				rest.setName(restInfo.getString("restname"));
+				rest.setPhoneNum(restInfo.getString("restphone"));
+				rest.setCity(restInfo.getInt("restcity"));
+				rest.setPosition(restInfo.getString("restaddress"));
+				rest.setRestType(restInfo.getInt("resttype"));
+				rest.setIsHot(restInfo.getInt("hot"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rest;
+	}
+	
 	public String test() {
 		String url = path + "userinfo?";
 		Map<String, String> map = new HashMap<String, String>();
@@ -119,4 +148,5 @@ public class ConnectServer {
 
 		return str;
 	}
+
 }

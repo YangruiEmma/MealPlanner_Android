@@ -13,6 +13,9 @@
     <string name="myInfo">我的</string>
     <string name="oderSeat">在线订座</string>
     <string name="title_activity_beam">Beam</string>
-    <string name="info">扫描中。。。</string>  
+    <string name="nfc_prompt">手机接触NFC设备</string>
+    <string name="lineTxt">请输入用餐人数:</string>
+    <string name="personTxt">人</string>
+    <string name="sureLine">确认排队</string>
 
 </resources>

@@ -3,15 +3,13 @@ package bjtu.group4.mealplanner.activity;
 import java.io.IOException;
 
 import bjtu.group4.mealplanner.R;
+
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -131,18 +129,17 @@ public class Beam2 extends Activity {
 				promt.setText("写入成功");  
 			}  
 		} catch (IOException e) {  
-			// TODO Auto-generated catch block  
 			e.printStackTrace();  
 		} finally {  
 			try {  
 				mfc.close();  
 			} catch (IOException e) {  
-				// TODO Auto-generated catch block  
 				e.printStackTrace();  
 			}  
 		}  
 	}
 	//字符序列转换为16进制字符串  
+	@SuppressWarnings("unused")
 	private String bytesToHexString(byte[] src) {  
 		StringBuilder stringBuilder = new StringBuilder("0x");  
 		if (src == null || src.length <= 0) {  
