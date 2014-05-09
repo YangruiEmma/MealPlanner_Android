@@ -83,7 +83,7 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 		case R.id.btnSure:  
 			InvitationTask task = new InvitationTask();
 			String friendIds = getFriendIdString();
-			task.execute(fatherActivity.getmRestId(), dateString + " " +timeString, friendIds);
+			task.execute(fatherActivity.getmRestId(), dateString + " " +timeString + ":00", friendIds);
 			break;  
 		default:  
 			break;  
