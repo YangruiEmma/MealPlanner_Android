@@ -19,8 +19,8 @@ public class RestInfoActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		setContentView(R.layout.activity_restinfo);
 		mRestaurant = (Restaurant)getIntent().getSerializableExtra("restInfo"); 
-		Intent intent = getIntent();
 		bindView();
 		super.onCreate(savedInstanceState);
 	}
@@ -35,20 +35,21 @@ public class RestInfoActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		if (mRestaurant != null) {
+			restNameTextView.setText(mRestaurant.getName());
+			restLocationTextView.setText(mRestaurant.getPosition());
+			restPhoneTextView.setText(mRestaurant.getPhoneNum());
+		}
 	}
 
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		if (mRestaurant != null) {
-			restNameTextView.setText(mRestaurant.getName());
-			restLocationTextView.setText(mRestaurant.getPosition());
-			restLocationTextView.setText(mRestaurant.getPhoneNum());
-		}
+		
 	}
 	
-	public void bindView() {
+	private void bindView() {
 		restNameTextView = (TextView)findViewById(R.id.restName);
 		restLocationTextView = (TextView)findViewById(R.id.restAddr);
 		restPhoneTextView = (TextView)findViewById(R.id.restPhone);
@@ -56,7 +57,11 @@ public class RestInfoActivity extends Activity {
 	
 	public void onClick(View v) {
 		if ( v.getId() == R.id.buttonPlanMeal ) {
-			
+			Intent intent = new Intent(RestInfoActivity.this, PlanMealActivity.class);
+			intent.putExtra("restId", mRestaurant.getId());  
+			intent.putExtra("restName", mRestaurant.getName());
+			intent.putExtra("restAddr", mRestaurant.getPosition());
+			startActivity(intent);
 		}
 		
 		else if ( v.getId() == R.id.buttonOrder ) {

@@ -32,64 +32,56 @@ import bjtu.group4.mealplanner.utils.CustomAdapter;
  *
  */
 public class PlanMealFragment extends ListFragment {
-	
+
 	private ListView restListView;
 	private CustomAdapter restListAdapter;
 	private List<Map<String, Object>> mData;
 	private String TAG = PlanMealFragment.class.getName();
 	private int startIndex = 0;
 	private List<Restaurant> restList;
-	
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.d(TAG, "onCreateView");
 		View messageLayout = inflater.inflate(R.layout.fragment_planmeal,
 				container, false);
 		restListView = (ListView) messageLayout.findViewById(android.R.id.list);
 		mData = new ArrayList<Map<String, Object>>();
-		
+		GetRestListTask task = new GetRestListTask();
+		task.execute(0, 10);
 		return messageLayout;
 	}
-	@Override
-	public void onResume() {
-	  //onResume happens after onStart and onActivityCreate
-	  GetRestListTask task = new GetRestListTask();
-	  task.execute(0, 10);
-	  super.onResume() ; 
-	}
-	
+
 	// **************需要重新考虑*************
 	public void AddDataToListView() {	
-			startIndex += 10;
-			GetRestListTask task = new GetRestListTask();
-			task.execute(startIndex + 1 , startIndex + 10);
+		startIndex += 10;
+		GetRestListTask task = new GetRestListTask();
+		task.execute(startIndex + 1 , startIndex + 10);
 	}
-	
-	@Override  
-    public void onListItemClick(ListView l, View v, int position, long id) {  
-        super.onListItemClick(l, v, position, id);  
-          
-        Log.d(TAG, "onListItemClick");
-        Toast.makeText(getActivity(), "You have selected " + position,
-                Toast.LENGTH_SHORT).show();
-        Restaurant restaurant = restList.get(position);
-        Intent intent = new Intent(getActivity(), RestInfoActivity.class);
-        Bundle mBundle = new Bundle();  
-        mBundle.putSerializable("restInfo",restaurant);  
-        intent.putExtras(mBundle);  
-        startActivity(intent);
-        
-    }  
 
-	
+	@Override  
+	public void onListItemClick(ListView l, View v, int position, long id) {  
+		super.onListItemClick(l, v, position, id);  
+
+		Restaurant restaurant = restList.get(position);
+		Intent intent = new Intent(getActivity(), RestInfoActivity.class);
+		Bundle mBundle = new Bundle();  
+		mBundle.putSerializable("restInfo",restaurant);  
+		intent.putExtras(mBundle);  
+		startActivity(intent);
+
+	}  
+
+
 	private class GetRestListTask extends AsyncTask<Object, Integer, Integer> {
 
 		@Override
 		protected Integer doInBackground(Object... params) {
 			int start = (Integer)params[0];
 			int end = (Integer)params[1];
-		
+
 			restList = new ConnectServer().getRestaurantsAll(start, end);
-			
+
 			if(restList.size() != 0) {
 				for(int i = 0; i < restList.size(); ++i) {
 					Restaurant rest = restList.get(i);
@@ -97,7 +89,7 @@ public class PlanMealFragment extends ListFragment {
 					map.put("id", rest.getId());
 					map.put("title", rest.getName());
 					map.put("info", rest.getPosition());
-					
+
 					mData.add(map);
 				}
 				return 1;
@@ -111,31 +103,31 @@ public class PlanMealFragment extends ListFragment {
 		protected void onPostExecute(Integer result) {
 			int response = result.intValue();
 			switch(response){
-				//成功
-				case 1:
-					if(mData.size() > 0)
-					{
-						if(restListAdapter == null) {
-							restListAdapter = new CustomAdapter(mData, getActivity());
-							setListAdapter(restListAdapter);
-						}
-						else {
-							restListAdapter.updateData(mData);
-							restListAdapter.notifyDataSetChanged();
-						}	
+			//成功
+			case 1:
+				if(mData.size() > 0)
+				{
+					if(restListAdapter == null) {
+						restListAdapter = new CustomAdapter(mData, getActivity());
+						setListAdapter(restListAdapter);
 					}
-					break;
+					else {
+						restListAdapter.updateData(mData);
+						restListAdapter.notifyDataSetChanged();
+					}	
+				}
+				break;
 				//失败
-				case 0:
-					Toast.makeText(getActivity(), "网络繁忙", Toast.LENGTH_LONG).show();
-					break;
+			case 0:
+				Toast.makeText(getActivity(), "网络繁忙", Toast.LENGTH_LONG).show();
+				break;
 			}
 			super.onPostExecute(result);
 		}
-		
-		
+
+
 	}
-	
-	
-	
+
+
+
 }
