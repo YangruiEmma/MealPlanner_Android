@@ -17,13 +17,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,14 +40,15 @@ public class Beam extends Activity {
 
 	private NfcAdapter nfcAdapter;  
 	private ProgressDialog progress;
-	
+
 	private TextView promt; 
 	private EditText personNum;
 	private LinearLayout lineLayout;
-	
+	private Button btn_line;
+
 	private String restaurantID = "";
 	Restaurant rest;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,17 +66,38 @@ public class Beam extends Activity {
 			return;  
 		}  
 
+		setListener();
 	}
-	
-	
+
+
 
 	private void bindViews() {
 		promt = (TextView) findViewById(R.id.promt); 
 		personNum = (EditText) findViewById(R.id.personNum); 
 		lineLayout = (LinearLayout)findViewById(R.id.lineLayout); 
 		lineLayout.setVisibility(View.INVISIBLE);
+		btn_line = (Button)findViewById(R.id.btn_line);
 	}
 
+	private void setListener() {
+		btn_line.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				AlertDialog.Builder builder= new AlertDialog.Builder(Beam.this);
+				builder.setTitle("确认排队")
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setMessage("是否确认现在排队用餐吗?").setPositiveButton("是", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+					}
+				}).setNegativeButton("否", null).create();
+				builder.show();
+			}
+		});
+	}
+	
 	@Override  
 	protected void onResume() {  
 		super.onResume();  
@@ -130,61 +158,61 @@ public class Beam extends Activity {
 		// 设置ProgressDialog 是否可以按退回键取消
 		progress.setCancelable(true);
 		progress.show();
-		
+
 		//异步获取餐厅信息
 		task.execute(restaurantID);
 	}
 
-	
+
 	private class RestInfoTask extends AsyncTask<Object, Integer, Integer>{
 
-    	/**
+		/**
 		 * 执行异步任务时回调，在Ui线程外执行
 		 * */
 		@Override
 		protected Integer doInBackground(Object... params) {
 			String restID = (String)params[0];
-			
+
 			rest = new ConnectServer().getRestInfo(restID);
-			
+
 			if(rest!=null){
 				return new Integer(1);
 			}else{
 				return new Integer(0);
-				
+
 			}
 		}
-		
+
 		@SuppressLint("UseValueOf")
 		@Override
 		protected void onPostExecute(Integer result) {
 			progress.cancel();
 			int response = result.intValue();
 			switch(response){
-				case 1:
-					promt.setText("欢迎到"+rest.getName()+"餐厅用餐");
-					lineLayout.setVisibility(View.VISIBLE);
-//					line_txt.setTextColor(android.graphics.Color.BLACK);
-//					person_txt.setTextColor(android.graphics.Color.BLACK);
-//					personNum.setFilters(new InputFilter[] {  
-//				            new InputFilter() {  
-//								@Override
-//								public CharSequence filter(CharSequence source,
-//										int start, int end, Spanned dest,
-//										int dstart, int dend) {
-//									return null;
-//								}  
-//				            }  
-//				        });  
-					break;
+			case 1:
+				promt.setText("欢迎到"+rest.getName()+"餐厅用餐");
+				lineLayout.setVisibility(View.VISIBLE);
+				//					line_txt.setTextColor(android.graphics.Color.BLACK);
+				//					person_txt.setTextColor(android.graphics.Color.BLACK);
+				//					personNum.setFilters(new InputFilter[] {  
+				//				            new InputFilter() {  
+				//								@Override
+				//								public CharSequence filter(CharSequence source,
+				//										int start, int end, Spanned dest,
+				//										int dstart, int dend) {
+				//									return null;
+				//								}  
+				//				            }  
+				//				        });  
+				break;
 				//登陆失败
-				case 0:
-					Toast.makeText(Beam.this, "获取服务器餐厅信息失败", Toast.LENGTH_LONG).show();
-					break;
+			case 0:
+				Toast.makeText(Beam.this, "获取服务器餐厅信息失败", Toast.LENGTH_LONG).show();
+				break;
 			}
 		}
-    }
-	
+	}
+
 	@SuppressWarnings("unused")
 	private void writeTag(Intent intent) {
 		Tag tagFromIntent = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG); 
