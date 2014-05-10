@@ -8,6 +8,7 @@
     <string name="title_activity_main">首页</string>
     <string name="title_activity_restinfo">餐馆详细</string>
     <string name="title_activity_planMeal">组饭局</string>
+    <string name="title_activity_order">在线订餐</string>
     <string name="startPage">首页</string>
     <string name="planMeal">组饭局</string>
     <string name="lineUp">排排队</string>
@@ -19,7 +20,11 @@
 	<string name="pickDate">请选择日期</string>
 	<string name="place">地点</string>
 	<string name="friend">邀请好友</string>
-
+	<string name="userInfo">我的信息</string>
+	<string name="myOrder">我的订单</string>
+	<string name="myInvitation">我的邀请</string>
+	<string name="myfriends">我的好友</string>
+	
     <string name="title_activity_beam">Beam</string>
     <string name="nfc_prompt">手机接触NFC设备</string>
     <string name="lineTxt">请输入用餐人数:</string>
