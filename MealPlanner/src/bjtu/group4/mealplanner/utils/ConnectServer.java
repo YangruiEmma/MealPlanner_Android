@@ -15,9 +15,9 @@ import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
-	//public static String path = "http://59.64.4.63:8080/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
+	public static String path = "http://59.64.4.63:8080/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
 	//public static String path = "http://172.28.32.75:8080/mealplanner/";
-	public static String path = "http://192.16.137.1:8080/mealplanner/";
+	//public static String path = "http://192.16.137.1:8080/mealplanner/";
 	/**
 	 * ÓÃ»§µÇÂ¼
 	 * 

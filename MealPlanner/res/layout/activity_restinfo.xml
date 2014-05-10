@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -8,32 +9,90 @@
         android:id="@+id/restName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="restname" />
+        android:layout_marginLeft="10dp"
+        android:textSize="22sp" />
 
-    <TextView
-        android:id="@+id/restAddr"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="addr" />
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp" >
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/restaurant" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/restPhone"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:drawableLeft="@drawable/phone"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/more"
+        android:textSize="15sp" />
 
-    <Button
-        android:id="@+id/buttonPlanMeal"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/restAddr"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/planMeal" 
-        android:onClick="onClick"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/position"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/more"
+        android:textSize="15sp" />
 
-    <Button
-        android:id="@+id/buttonOrder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/oderSeat"
-        android:onClick="onClick" />
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="10dp" >
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp" >
+
+        <Button
+            android:id="@+id/buttonOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="#DC143C"
+            android:drawableLeft="@drawable/order"
+            android:onClick="onClick"
+            android:text="@string/oderSeat"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/buttonPlanMeal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="#DC143C"
+            android:drawableLeft="@drawable/meal"
+            android:onClick="onClick"
+            android:text="@string/planMeal"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
 
 </LinearLayout>

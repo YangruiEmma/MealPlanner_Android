@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/tab_bg" >
+        android:background="#383838" >
 
         <RelativeLayout
             android:id="@+id/startPage_layout"
@@ -31,6 +31,7 @@
                     android:id="@+id/startPage_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/startPage"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/startpage_unselected" />
 
@@ -61,6 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/planMeal"
                     android:src="@drawable/planmeal_unselected" />
 
                 <TextView
@@ -89,6 +91,7 @@
                     android:id="@+id/lineUp_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/lineUp"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/lineup_unselected" />
 
@@ -118,6 +121,7 @@
                     android:id="@+id/myInfo_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/myInfo"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/myinfo_unselected" />
 
