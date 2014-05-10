@@ -31,8 +31,8 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 	private static Button pickDateBtn;
 	private Button sureBtn;
 	private PlanMealActivity fatherActivity;
-	private static String timeString;
-	private static String dateString;
+	private static String timeString = "";
+	private static String dateString = "";
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -82,8 +82,17 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 			break;  
 		case R.id.btnSure:  
 			InvitationTask task = new InvitationTask();
-			String friendIds = getFriendIdString();
-			task.execute(fatherActivity.getmRestId(), dateString + " " +timeString + ":00", friendIds);
+			if(dateString == "" ) {
+				Toast.makeText(getActivity(), "请选择日期", Toast.LENGTH_LONG).show();
+			}
+			else if(timeString == "") {
+				Toast.makeText(getActivity(), "请选择时间", Toast.LENGTH_LONG).show();
+			}
+			else {
+				String friendIds = getFriendIdString();
+				task.execute(fatherActivity.getmRestId(), dateString + " " +timeString + ":00", friendIds);
+			}
+			
 			break;  
 		default:  
 			break;  
