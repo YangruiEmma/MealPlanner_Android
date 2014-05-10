@@ -7,11 +7,19 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_restinfo">RestaurantInfo</string>
+    <string name="title_activity_planMeal">PlanMeal</string>
     <string name="startPage">首页</string>
     <string name="planMeal">组饭局</string>
     <string name="lineUp">排排队</string>
     <string name="myInfo">我的</string>
     <string name="oderSeat">在线订座</string>
+    <string name="chooseFriends">选择好友</string>
+    <string name="sure">确定</string>
+    <string name="pickTime">选择时间</string>
+	<string name="pickDate">选择日期</string>
+	<string name="place">地点</string>
+	<string name="friend">邀请好友</string>
+
     <string name="title_activity_beam">Beam</string>
     <string name="nfc_prompt">手机接触NFC设备</string>
     <string name="lineTxt">请输入用餐人数:</string>

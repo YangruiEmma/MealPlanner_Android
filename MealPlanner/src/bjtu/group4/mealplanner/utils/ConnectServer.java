@@ -8,15 +8,16 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.R.string;
 import android.util.Log;
 import bjtu.group4.mealplanner.model.Food;
+import bjtu.group4.mealplanner.model.Friend;
 import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
 	//public static String path = "http://59.64.4.63:8080/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
-	public static String path = "http://172.28.32.75:8080/mealplanner/";
+	//public static String path = "http://172.28.32.75:8080/mealplanner/";
+	public static String path = "http://192.16.137.1:8080/mealplanner/";
 	/**
 	 * 用户登录
 	 * 
@@ -63,7 +64,7 @@ public class ConnectServer {
 	 */
 	public List<Restaurant> getRestaurantsAll(int start, int end) {
 		List<Restaurant> restaurants = new ArrayList<Restaurant>();
-		String url = path + "app/rest/getRest?";
+		String url = path + "app/rest/getSeveralRestWithMenu?";
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("start", start + "");
 		map.put("end", end + "");
@@ -148,5 +149,72 @@ public class ConnectServer {
 
 		return str;
 	}
+	
+	/**
+	 * 所有好友
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public List<Friend> getFriendsAll(int userId) {
+		List<Friend> friends = new ArrayList<Friend>();
+		String url = path + "app/friend/getAllFriends?";
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId + "");
+		
+		String str = HttpUtils.postData(url, map);
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				Log.d("getFriendsAll", "success");
+				JSONObject objData = obj.getJSONObject("data");
+				JSONArray objFriendsArray = objData.getJSONArray("userInfos");
+				for (int i = 0; i < objFriendsArray.length(); i++) {
+					JSONObject dataObj = objFriendsArray.getJSONObject(i);
+					
+					Friend friend = new Friend();
+					friend.setFriendId(dataObj.getInt("userid"));
+					friend.setFriendNameString(dataObj.getString("username"));
+					friend.setFriendPhone(dataObj.getString("phonenum"));
+					//friend.setFriendEmail(objData.getString("email"));
+					
+					friends.add(friend);
+				}
+			}
+			else {
+				Log.d("getFriendsAll", "can not get friendsAll data");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return friends;
+	}
 
+	public boolean sendInvitation(int restId, String dateTime, String friendIds) {
+		int userId = SharedData.USERID;
+		String url = path + "app/meal/createMeal?";
+		Map<String, String> map = new HashMap<String, String>();
+		
+		map.put("restId", restId+"");
+		map.put("datetime",dateTime);
+		map.put("userId", userId+"");
+		map.put("friendIds",friendIds);
+		
+		String str = HttpUtils.postData(url, map);
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				Log.d("sendInvitation", "success");
+				return true;
+			}
+			else {
+				Log.d("sendInvitation", "send sendInvitation data fail");
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;		
+	}
 }

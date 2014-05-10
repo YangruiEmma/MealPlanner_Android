@@ -2,7 +2,6 @@ package bjtu.group4.mealplanner.activity;
 
 import bjtu.group4.mealplanner.R;
 import android.os.Bundle;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnClickListener {
 	
-	ActionBar actionBar; 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

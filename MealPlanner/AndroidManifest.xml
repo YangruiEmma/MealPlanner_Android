@@ -7,7 +7,9 @@
     <uses-sdk
         android:minSdkVersion="12"
         android:targetSdkVersion="18" />
-
+    
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.NFC" />
@@ -53,6 +55,14 @@
         <activity
             android:name="bjtu.group4.mealplanner.activity.MainActivity"
             android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name="bjtu.group4.mealplanner.activity.RestInfoActivity"
+            android:label="@string/title_activity_restinfo" >
+        </activity>
+        <activity
+            android:name="bjtu.group4.mealplanner.activity.PlanMealActivity"
+            android:label="@string/title_activity_planMeal" >
         </activity>
         <activity
             android:name="bjtu.group4.mealplanner.activity.Beam"
