@@ -17,5 +17,6 @@
     <string name="lineTxt">请输入用餐人数:</string>
     <string name="personTxt">人</string>
     <string name="sureLine">确认排队</string>
+    <string name="nfcview">NFC View</string>
 
 </resources>
