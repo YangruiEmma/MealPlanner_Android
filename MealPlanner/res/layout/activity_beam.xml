@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15pt"
+            android:layout_marginLeft="30pt"
             android:text="@string/lineTxt"
             android:textSize="7pt" />
 
@@ -40,25 +40,40 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5pt"
+            android:layout_marginRight="30pt"
             android:text="@string/personTxt"
             android:textSize="7pt" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <Button
             android:id="@+id/btn_line"
-            android:layout_width="70dp"
+            android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_marginRight="15pt"
-            android:background="@drawable/login2"
+            android:background="@drawable/line_btn"
             android:text="@string/sureLine"
+            android:textColor="#FFFFFF"
             android:textSize="6pt" />
-        
+        <Button
+            android:id="@+id/nfcbtn_home"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="15pt"
+            android:background="@drawable/line_btn"
+            android:text="@string/home"
+            android:textColor="#FFFFFF"
+            android:textSize="6pt" />
     </LinearLayout>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/nfc_view" 
-        android:contentDescription="@string/nfcview"/>
+        android:contentDescription="@string/nfcview"
+        android:src="@drawable/nfc_view" />
 
 </LinearLayout>

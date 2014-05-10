@@ -4,6 +4,7 @@
     <string name="app_name">MealPlanner</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_beam">Beam</string>
     <string name="title_activity_login">登录</string>
     <string name="title_activity_main">首页</string>
     <string name="title_activity_restinfo">餐馆详细</string>
@@ -25,11 +26,11 @@
 	<string name="myInvitation">我的邀请</string>
 	<string name="myfriends">我的好友</string>
 	
-    <string name="title_activity_beam">Beam</string>
     <string name="nfc_prompt">手机接触NFC设备</string>
     <string name="lineTxt">请输入用餐人数:</string>
     <string name="personTxt">人</string>
-    <string name="sureLine">确认排队</string>
+    <string name="sureLine">排        队</string>
     <string name="nfcview">NFC View</string>
+    <string name="home">主       页</string>
 
 </resources>
