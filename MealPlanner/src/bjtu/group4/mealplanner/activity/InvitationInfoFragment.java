@@ -73,15 +73,14 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 	public void onClick(View v) {
 		switch (v.getId()) {  
 		case R.id.btnChooseDate:    
-			DialogFragment df = new DatePickerFragment();  
-			df.show(getFragmentManager(), "DatePicker"); 	
+			DatePickerFragment df = new DatePickerFragment();  
+			df.show(getFragmentManager(), "DatePicker"); 
 			break;  
 		case R.id.btnChooseTime:  
-			DialogFragment tf = new TimePickerFragment();  
+			TimePickerFragment tf = new TimePickerFragment(); 
 			tf.show(getFragmentManager(), "TimePicker"); 
 			break;  
-		case R.id.btnSure:  
-			InvitationTask task = new InvitationTask();
+		case R.id.btnSure:  	
 			if(dateString == "" ) {
 				Toast.makeText(getActivity(), "请选择日期", Toast.LENGTH_LONG).show();
 			}
@@ -89,17 +88,18 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 				Toast.makeText(getActivity(), "请选择时间", Toast.LENGTH_LONG).show();
 			}
 			else {
+				InvitationTask task = new InvitationTask();
 				String friendIds = getFriendIdString();
 				task.execute(fatherActivity.getmRestId(), dateString + " " +timeString + ":00", friendIds);
 			}
-			
+
 			break;  
 		default:  
 			break;  
 		}  
 
 	}
-	
+
 	private String getFriendIdString() {
 		String tempString = "";
 		ArrayList<Integer> list = fatherActivity.getFriends();
@@ -118,40 +118,39 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 			String dateTime = (String)params[1];
 			String friendIds = (String)params[2];
 			Boolean result = new ConnectServer().sendInvitation((int)restId, dateTime, friendIds);
-			
+
 			if(result){
 				return 1;
 			}else{
 				return 0;			
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(Integer result) {
-			
+
 			int response = result.intValue();
 			switch(response){
-				//成功
-				case 1:
-					//显示成功的信息
-					Toast.makeText(getActivity(), "创建邀请成功", Toast.LENGTH_LONG).show();
-					
-					Intent intent = new Intent();
-					intent.setClass(getActivity(), MainActivity.class);
-					startActivity(intent);
-					getActivity().finish();
-					
-					break;
+			//成功
+			case 1:
+				//显示成功的信息
+				Toast.makeText(getActivity(), "创建邀请成功", Toast.LENGTH_LONG).show();
+
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), MainActivity.class);
+				startActivity(intent);
+				getActivity().finish();
+
+				break;
 				//失败
-				case 0:
-					Toast.makeText(getActivity(), "创建邀请失败", Toast.LENGTH_LONG).show();
-					break;
+			case 0:
+				Toast.makeText(getActivity(), "创建邀请失败", Toast.LENGTH_LONG).show();
+				break;
 			}
 		}
-    }
-	
-	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {  
+	}
 
+	public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {  
 		@Override  
 		public Dialog onCreateDialog(Bundle savedInstanceState) {  
 			// Use the current time as the default values for the picker  
@@ -162,15 +161,16 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 			// Create a new instance of TimePickerDialog and return it  
 			return new TimePickerDialog(getActivity(), this, hour, minute,  
 					DateFormat.is24HourFormat(getActivity()));  
-		}  
+		} 
 
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {  
 			// Do something with the time chosen by the user  
 			timeString = hourOfDay + ":" + minute;
 			pickTimeBtn.setText("时间:"+timeString);
+
 		}  
 	}  
-	
+
 	public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {  
 
 		@Override  
@@ -180,16 +180,16 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 			int year = c.get(Calendar.YEAR);  
 			int month = c.get(Calendar.MONTH);  
 			int day = c.get(Calendar.DAY_OF_MONTH);
-			
+
 			DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);  
 			DatePicker datePicker = dialog.getDatePicker(); 
 			datePicker.setMinDate(c.getTimeInMillis()); 
-			
+
 			c.add(Calendar.DATE,   +7);
 			datePicker.setMaxDate(c.getTimeInMillis());  
 			return dialog;  
-		}  
-		
+		} 
+
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
@@ -197,7 +197,7 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 			monthOfYear += 1;
 			dateString = year + "-" + monthOfYear + "-" + dayOfMonth;
 			pickDateBtn.setText("日期：" + dateString);
-		}  
+		} 
 	} 
 
 }

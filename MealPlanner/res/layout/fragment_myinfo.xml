@@ -4,17 +4,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/restName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/userInfo"
-        android:textSize="22sp" />
-
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="280dp" >
+        android:layout_height="320dp" >
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/images" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageViewBack"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageViewBack"
+            android:layout_marginLeft="37dp"
+            android:layout_marginTop="14dp"
+            android:layout_toRightOf="@+id/imageView1"
+            android:text="TextView" />
 
         <ImageView
             android:id="@+id/imageView1"
@@ -22,43 +42,80 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/friend" />
+            android:layout_marginLeft="19dp"
+            android:layout_marginTop="104dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/userimage" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/imageView1"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/imageView1"
-            android:text="TextView" />
+            android:layout_alignLeft="@+id/imageView1"
+            android:layout_below="@+id/imageView1"
+            android:layout_marginTop="20dp"
+            android:text="@string/phoneNum" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_below="@+id/textView3"
+            android:layout_marginTop="16dp"
+            android:text="@string/email" />
+
+        <TextView
+            android:id="@+id/phoneNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignRight="@+id/imageView1" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView4"
+            android:layout_alignBottom="@+id/textView4"
+            android:layout_alignLeft="@+id/phoneNum" />
+
     </RelativeLayout>
 
     <TextView
         android:id="@+id/myFriendTextView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:clickable="true"
+        android:drawableLeft="@drawable/friend"
+        android:drawableRight="@drawable/more"
+        android:gravity="center"
         android:text="@string/myfriends" />
 
     <TextView
         android:id="@+id/myInvitationTextView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:clickable="true"
+        android:drawableLeft="@drawable/heart"
+        android:drawableRight="@drawable/more"
+        android:gravity="center"
         android:text="@string/myInvitation" />
 
     <TextView
         android:id="@+id/myOrderTextView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:clickable="true"
+        android:drawableLeft="@drawable/star"
+        android:drawableRight="@drawable/more"
+        android:gravity="center"
         android:text="@string/myOrder" />
 
 </LinearLayout>

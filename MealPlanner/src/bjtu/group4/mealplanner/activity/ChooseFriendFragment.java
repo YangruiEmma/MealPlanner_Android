@@ -140,8 +140,6 @@ public class ChooseFriendFragment extends ListFragment {
 			}
 			super.onPostExecute(result);
 		}
-
-
-	}
+	}// AnsyTask Class End
 
 }

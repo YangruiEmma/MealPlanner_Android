@@ -25,6 +25,11 @@
 	<string name="myOrder">我的订单</string>
 	<string name="myInvitation">我的邀请</string>
 	<string name="myfriends">我的好友</string>
+	<string name="myDishes">我的菜单</string>
+	<string name="contactInfo">联系信息</string>
+	<string name="numOfPeople">人数</string>
+	<string name="phoneNum">手机</string>
+	<string name="email">邮箱</string>
 	
     <string name="nfc_prompt">手机接触NFC设备</string>
     <string name="lineTxt">请输入用餐人数:</string>

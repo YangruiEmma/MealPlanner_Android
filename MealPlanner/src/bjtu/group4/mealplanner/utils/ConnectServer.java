@@ -8,6 +8,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.R.integer;
+import android.R.string;
 import android.util.Log;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Friend;
@@ -15,9 +17,10 @@ import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
-	public static String path = "http://59.64.4.63:8080/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
-	//public static String path = "http://172.28.32.75:8080/mealplanner/";
-	//public static String path = "http://192.16.137.1:8080/mealplanner/";
+	public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
+	//public static String path = "http://172.28.34.136:8090/mealplanner/";
+	//public static String path = "http://192.16.137.1:8090/mealplanner/";
+	//public static String path = "http://172.28.32.185:8090/mealplanner/";
 	/**
 	 * ÓÃ»§µÇÂ¼
 	 * 
@@ -200,6 +203,37 @@ public class ConnectServer {
 		map.put("datetime",dateTime);
 		map.put("userId", userId+"");
 		map.put("friendIds",friendIds);
+		
+		String str = HttpUtils.postData(url, map);
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				Log.d("sendInvitation", "success");
+				return true;
+			}
+			else {
+				Log.d("sendInvitation", "send sendInvitation data fail");
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;		
+	}
+	
+	public boolean sendOrder(int restId, String dateTime, String dishesIds, String peopleNum, int mealId, String phoneNum) {
+		int userId = SharedData.USERID;
+		String url = path + "app/order/createOrder?";
+		Map<String, String> map = new HashMap<String, String>();
+		
+		map.put("restId", restId+"");
+		map.put("date",dateTime);
+		map.put("userId", userId+"");
+		map.put("menuIds",dishesIds);
+		map.put("peopleNum",peopleNum+"");
+		map.put("phoneNum",phoneNum);
+		if(mealId != -1)
+			map.put("mealId",mealId +"");
 		
 		String str = HttpUtils.postData(url, map);
 		try {

@@ -1,5 +1,7 @@
 package bjtu.group4.mealplanner.activity;
 
+import java.util.ArrayList;
+
 import bjtu.group4.mealplanner.R;
 import bjtu.group4.mealplanner.model.Restaurant;
 import android.app.Activity;
@@ -13,6 +15,8 @@ public class OrderActivity extends Activity {
 	private OrderInfoFragment orderInfoFragment;
 	private final static int contentID = R.id.planMealContent;
 	private Restaurant mRestaurant;
+	private ArrayList<Integer> mDishIds = new ArrayList<Integer>();
+	private ArrayList<String> mDishNames = new ArrayList<String>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,14 @@ public class OrderActivity extends Activity {
 	
 	public Restaurant getRestaurant() {
 		return mRestaurant;
+	}
+	
+	public ArrayList<Integer> getDishIds() {
+		return mDishIds;
+	}
+	
+	public ArrayList<String> getDishNames() {
+		return mDishNames;
 	}
 
 }

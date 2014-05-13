@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import bjtu.group4.mealplanner.R;
+import bjtu.group4.mealplanner.utils.SharedData;
 
 /**
  * @author lcmm
@@ -42,8 +43,13 @@ public class MyInfoFragment extends Fragment implements OnClickListener {
 		myInvitationTextView.setOnClickListener(this);
 		myOrderTextView = (TextView)v.findViewById(R.id.myOrderTextView);
 		myOrderTextView.setOnClickListener(this);
+		myNameTextView = (TextView)v.findViewById(R.id.userName);
+		myEmailTextView = (TextView)v.findViewById(R.id.email);
+		myPhoneTextView = (TextView)v.findViewById(R.id.phoneNum);
+		myNameTextView.setText(SharedData.USERNAME);
+		myEmailTextView.setText(SharedData.EMAIL);
 	}
-
+	
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import android.R.anim;
 import android.app.ListFragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import bjtu.group4.mealplanner.utils.CustomAdapter;
  */
 public class PlanMealFragment extends ListFragment {
 
-	private ListView restListView;
+	private ProgressDialog progress;
 	private CustomAdapter restListAdapter;
 	private List<Map<String, Object>> mData;
 	private String TAG = PlanMealFragment.class.getName();
@@ -45,13 +46,25 @@ public class PlanMealFragment extends ListFragment {
 		Log.d(TAG, "onCreateView");
 		View messageLayout = inflater.inflate(R.layout.fragment_planmeal,
 				container, false);
-		restListView = (ListView) messageLayout.findViewById(android.R.id.list);
-		mData = new ArrayList<Map<String, Object>>();
-		GetRestListTask task = new GetRestListTask();
-		task.execute(0, 10);
+		bindViewAndGetData();
 		return messageLayout;
 	}
 
+	private void bindViewAndGetData() {
+		mData = new ArrayList<Map<String, Object>>();
+		GetRestListTask task = new GetRestListTask();
+		task.execute(0, 10);
+		progress = new ProgressDialog(getActivity());
+		progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progress.setTitle("请稍等");
+		progress.setMessage("努力加载中。。。");
+		// 设置ProgressDialog 的进度条是否不明确 false 就是不设置为不明确
+		progress.setIndeterminate(false);
+		// 设置ProgressDialog 是否可以按退回键取消
+		progress.setCancelable(true);
+		progress.show();
+	}
+	
 	// **************需要重新考虑*************
 	public void AddDataToListView() {	
 		startIndex += 10;
@@ -101,6 +114,7 @@ public class PlanMealFragment extends ListFragment {
 
 		@Override
 		protected void onPostExecute(Integer result) {
+			progress.cancel();
 			int response = result.intValue();
 			switch(response){
 			//成功

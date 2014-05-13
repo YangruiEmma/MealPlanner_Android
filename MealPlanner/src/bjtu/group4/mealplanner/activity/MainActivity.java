@@ -102,9 +102,16 @@ public class MainActivity extends Activity implements OnClickListener {
         default:  
             break;  
         }  
-    }  
+    } 
+    
   
-    /** 
+    @Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		//super.onSaveInstanceState(outState);
+	}
+
+	/** 
      * 根据传入的index参数来设置选中的tab页。 
      *  
      * @param index 
