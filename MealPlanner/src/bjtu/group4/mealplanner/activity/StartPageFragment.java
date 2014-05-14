@@ -179,9 +179,11 @@ OnMyLocationButtonClickListener{
 		mLocationClient.requestLocationUpdates(REQUEST, this);  // LocationListener
 		if (mLocationClient != null && mLocationClient.isConnected()) {
 			mLocation = mLocationClient.getLastLocation();
-			LatLng latlng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-			mMap.setMyLocationEnabled(true);
-			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
+			if(mLocation != null) {
+				LatLng latlng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+				mMap.setMyLocationEnabled(true);
+				mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
+			}
 		}
 	}
 
