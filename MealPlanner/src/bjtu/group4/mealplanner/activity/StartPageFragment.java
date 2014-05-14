@@ -7,16 +7,23 @@ import java.util.Locale;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import bjtu.group4.mealplanner.R;
+import android.R.bool;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.location.Address;
@@ -42,6 +49,8 @@ OnMyLocationButtonClickListener{
 	private GoogleMap mMap;
 	private LocationClient mLocationClient;
 	private TextView myTextView;
+	private boolean isServiceOk = true;
+	private Location mLocation = new Location("");
 	private final static String TAG = StartPageFragment.class.getName();
 
 	private static final LocationRequest REQUEST = LocationRequest.create()
@@ -53,20 +62,49 @@ OnMyLocationButtonClickListener{
 			Bundle savedInstanceState) {
 		View messageLayout = inflater.inflate(R.layout.fragment_startpage,
 				container, false);
-		mMapView = (MapView) messageLayout.findViewById(R.id.map);
-		myTextView = (TextView)messageLayout.findViewById(R.id.location);
-		mMapView.onCreate(savedInstanceState);
-		setUpMapIfNeeded();
+		
+		if(servicesConnected()) {
+			mMapView = (MapView) messageLayout.findViewById(R.id.map);
+			myTextView = (TextView)messageLayout.findViewById(R.id.location);
+			mMapView.onCreate(savedInstanceState);
+			setUpMapIfNeeded();
+		}
 		return messageLayout;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		if(isServiceOk == false)
+			return;
 		setUpMapIfNeeded();
 		mMapView.onResume();
 		setUpLocationClientIfNeeded();
 		mLocationClient.connect();
+	}
+
+	private boolean servicesConnected() {
+		// Check that Google Play services is available
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+		
+		// If Google Play services is available
+		if(ConnectionResult.SUCCESS == resultCode) {
+			Log.d("StartPageFragment", "Google Play services is available.");
+			isServiceOk = true;
+		} else {
+			// Get the error code
+			ConnectionResult connectionResult = new ConnectionResult(resultCode, null);
+			int errorCode = connectionResult.getErrorCode();
+			// Get the error dialog from Google Play services
+			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+					errorCode, getActivity(), -1);
+			// If Google Play services can provide an error dialog
+			if(errorDialog != null) {
+				errorDialog.show();
+			}
+			isServiceOk = false;
+		}
+		return isServiceOk;
 	}
 
 	private void setUpMapIfNeeded() {
@@ -75,6 +113,7 @@ OnMyLocationButtonClickListener{
 			// Try to obtain the map from the SupportMapFragment.
 			if(mMapView != null)
 				mMap = mMapView.getMap();
+				MapsInitializer.initialize(getActivity());
 			// Check if we were successful in obtaining the map.
 			if (mMap != null) {
 				setUpMap();
@@ -82,12 +121,6 @@ OnMyLocationButtonClickListener{
 		}
 	}
 
-	/**
-	 * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-	 * just add a marker near Africa.
-	 * <p>
-	 * This should only be called once and when we are sure that {@link #mMap} is not null.
-	 */
 	private void setUpMap() {
 		mMap.setMyLocationEnabled(true);
 		mMap.setOnMyLocationButtonClickListener(this);
@@ -100,13 +133,6 @@ OnMyLocationButtonClickListener{
 					getActivity().getApplicationContext(),
 					this,  // ConnectionCallbacks
 					this); // OnConnectionFailedListener
-		}
-	}
-
-	public void showMyLocation(View view) {
-		if (mLocationClient != null && mLocationClient.isConnected()) {
-			String msg = "Location = " + mLocationClient.getLastLocation();
-			Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -151,6 +177,12 @@ OnMyLocationButtonClickListener{
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		mLocationClient.requestLocationUpdates(REQUEST, this);  // LocationListener
+		if (mLocationClient != null && mLocationClient.isConnected()) {
+			mLocation = mLocationClient.getLastLocation();
+			LatLng latlng = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+			mMap.setMyLocationEnabled(true);
+			mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 15));
+		}
 	}
 
 	/**

@@ -4,19 +4,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/chooseFriends"
-        android:textSize="22sp" />
-
     <ListView
-        android:id="@id/android:list"
+        android:id="@+id/OrderListView"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
+        android:layout_height="0dip"
         android:layout_weight="0.66"
         android:drawSelectorOnTop="false" >
     </ListView>
@@ -29,7 +20,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:background="#DC143C"
-        android:text="@string/sure"
+        android:text="@string/createOrder"
+        android:onClick="onClick"
         android:textColor="#ffffff" />
 
 </LinearLayout>

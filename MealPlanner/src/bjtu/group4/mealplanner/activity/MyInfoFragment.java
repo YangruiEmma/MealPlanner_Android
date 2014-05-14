@@ -4,6 +4,7 @@
 package bjtu.group4.mealplanner.activity;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ public class MyInfoFragment extends Fragment implements OnClickListener {
 		myPhoneTextView = (TextView)v.findViewById(R.id.phoneNum);
 		myNameTextView.setText(SharedData.USERNAME);
 		myEmailTextView.setText(SharedData.EMAIL);
+		myPhoneTextView.setText(SharedData.PHONE);
 	}
 	
 	@Override
@@ -60,7 +62,8 @@ public class MyInfoFragment extends Fragment implements OnClickListener {
 			Log.d("MyInfoFragment","onClickmyInvitationTextView");
 			break;
 		case R.id.myOrderTextView:
-			Log.d("MyInfoFragment","onClickmyOrderTextView");
+			Intent intent = new Intent(getActivity(), AllOrderList.class);
+			startActivity(intent);
 			break;
 		default:
 			break;

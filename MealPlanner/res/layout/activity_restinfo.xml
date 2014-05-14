@@ -54,15 +54,17 @@
     <ListView
         android:id="@+id/restInfoListView"
         android:layout_width="fill_parent"
-        android:layout_height="230dp"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/restAddr"
+        android:layout_marginBottom="60dp"
         android:layout_marginTop="10dp" >
+
     </ListView>
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true" >
 
         <Button

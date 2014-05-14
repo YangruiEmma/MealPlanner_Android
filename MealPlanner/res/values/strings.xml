@@ -6,10 +6,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_beam">Beam</string>
     <string name="title_activity_login">登录</string>
-    <string name="title_activity_main">首页</string>
+    <string name="title_activity_main">MealPlanner</string>
     <string name="title_activity_restinfo">餐馆详细</string>
     <string name="title_activity_planMeal">组饭局</string>
     <string name="title_activity_order">在线订餐</string>
+    <string name="title_activity_orderList">我的订单</string>
+    <string name="title_activity_orderDetail">订单详情</string>
     <string name="startPage">首页</string>
     <string name="planMeal">组饭局</string>
     <string name="lineUp">排排队</string>
@@ -30,6 +32,10 @@
 	<string name="numOfPeople">人数</string>
 	<string name="phoneNum">手机</string>
 	<string name="email">邮箱</string>
+	<string name="imgContentBack">backgroundView</string>
+	<string name="imgContentUser">userImage</string>
+	<string name="createOrder">创建订单</string>
+	<string name="cancleOrder">取消订单</string>
 	
     <string name="nfc_prompt">手机接触NFC设备</string>
     <string name="lineTxt">请输入用餐人数:</string>

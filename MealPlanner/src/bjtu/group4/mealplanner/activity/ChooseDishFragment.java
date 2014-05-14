@@ -76,7 +76,6 @@ public class ChooseDishFragment extends ListFragment {
 						
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
 							fatherActivity.replaceContent();
 						}
 
@@ -98,7 +97,11 @@ public class ChooseDishFragment extends ListFragment {
 			map.put("id", f.getFoodId());
 			map.put("title", f.getFoodName());
 			map.put("info", f.getFoodPrice()+"");
+			map.put("more", f.getFoodTypeName());
 			map.put("status", -1);
+			if(f.getIsHot() == 1) {
+				map.put("imgStatus", R.drawable.hot);
+			}
 			mData.add(map);
 		}
 	}
@@ -106,18 +109,23 @@ public class ChooseDishFragment extends ListFragment {
 	@Override  
 	public void onListItemClick(ListView l, View v, int position, long id) {  
 		super.onListItemClick(l, v, position, id);
-		Log.d(TAG, "onListItemClick");
 
 		if(mData.size() < position + 1 ) return;
 
 		if((Integer)mData.get(position).get("status")  == -1) {
 			//v.setBackgroundColor(0xDC143C);
 			v.setBackgroundColor(Color.GRAY);
+			TextView numTextView = (TextView)v.findViewById(R.id.itemNum);
+			numTextView.setText("1·Ý");
 			mData.get(position).put("status", 1);
 		}
 		else {
 			v.setBackgroundColor(android.R.attr.colorBackground);
+			TextView numTextView = (TextView)v.findViewById(R.id.itemNum);
+			numTextView.setText("");
 			mData.get(position).put("status", -1);
 		}
 	}
+	
+	
 }

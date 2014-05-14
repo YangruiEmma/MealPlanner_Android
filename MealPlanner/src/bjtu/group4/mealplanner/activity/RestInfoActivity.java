@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.android.gms.drive.internal.g;
+
 import bjtu.group4.mealplanner.R;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Restaurant;
@@ -62,7 +64,10 @@ public class RestInfoActivity extends Activity {
 					map.put("id", f.getFoodId());
 					map.put("title", f.getFoodName());
 					map.put("info", f.getFoodPrice()+"");
-
+					map.put("more", f.getFoodTypeName());
+					if(f.getIsHot() == 1) {
+						map.put("imgStatus", R.drawable.hot);
+					}
 					mData.add(map);
 				}
 			}

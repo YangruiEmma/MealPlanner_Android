@@ -54,14 +54,24 @@ public class CustomAdapter extends BaseAdapter {
 			holder.img = (ImageView)convertView.findViewById(R.id.itemImg);
 			holder.title = (TextView)convertView.findViewById(R.id.itemTitle);
 			holder.info = (TextView)convertView.findViewById(R.id.itemInfo);
-		
+			holder.more = (TextView)convertView.findViewById(R.id.itemMore);
+			holder.imgStatus = (ImageView)convertView.findViewById(R.id.itemStatusImg);
+			
 			convertView.setTag(holder);
 		}else {
 		      holder = (ViewHolder)convertView.getTag();
 		}
-		//holder.img.setBackgroundResource((Integer)mData.get(position).get("img"));
+		
 		holder.title.setText((String)mData.get(position).get("title"));
 		holder.info.setText((String)mData.get(position).get("info"));
+		holder.more.setText((String)mData.get(position).get("more"));
+		if(mData.get(position).get("img") != null)
+			holder.img.setBackgroundResource((Integer)mData.get(position).get("img"));
+		if(mData.get(position).get("imgStatus") != null) {
+			holder.imgStatus.setVisibility(View.VISIBLE);
+			holder.imgStatus.setBackgroundResource((Integer)mData.get(position).get("imgStatus"));
+		}
+			
 		return convertView;
 	}
 
@@ -69,5 +79,7 @@ public class CustomAdapter extends BaseAdapter {
 		public ImageView img;
 		public TextView title;
 		public TextView info;
+		public TextView more;
+		public ImageView imgStatus;
     }
 }

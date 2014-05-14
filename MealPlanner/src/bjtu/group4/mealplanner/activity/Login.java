@@ -168,6 +168,7 @@ public class Login extends Activity {
 				SharedData.PASSWORD = user.getPassword();
 				SharedData.GENDER = user.getGender();
 				SharedData.EMAIL = user.getEmail();
+				SharedData.PHONE = user.getPhone();
 				
 				//Application ¼ÇÂ¼µÇÂ¼×´Ì¬
 				MealApplication application = (MealApplication) getApplication();

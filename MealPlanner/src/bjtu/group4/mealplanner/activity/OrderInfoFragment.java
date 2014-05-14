@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import bjtu.group4.mealplanner.R;
 import bjtu.group4.mealplanner.utils.ConnectServer;
+import bjtu.group4.mealplanner.utils.SharedData;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -58,6 +59,8 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 		pickDateBtn.setOnClickListener(this);
 		pickTimeBtn.setOnClickListener(this);
 		sureBtn.setOnClickListener(this);
+		
+		phoneEditText.setText(SharedData.PHONE);
 	}
 	
 	@Override
@@ -165,7 +168,7 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 			int minute = c.get(Calendar.MINUTE);  
 
 			// Create a new instance of TimePickerDialog and return it  
-			return new TimePickerDialog(getActivity(), this, hour, 0,  
+			return new TimePickerDialog(getActivity(), this, hour, minute,  
 					DateFormat.is24HourFormat(getActivity()));  
 		} 
 
