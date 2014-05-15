@@ -23,5 +23,5 @@ local.properties
 proguard/
 
 *.classpath
-MealPlanner/project.properties
+*project.properties
 .settings/
