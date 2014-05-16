@@ -142,6 +142,7 @@ public class Login extends Activity {
 			User user = new ConnectServer().userLogin(name, pwd);
 
 			if(user!=null){
+				
 				if (user.isloginCorrect()) {
 					//µÇÂ½³É¹¦
 					SharedPreferences shared = getSharedPreferences("user_info", MODE_PRIVATE);
@@ -166,6 +167,7 @@ public class Login extends Activity {
 					SharedData.PASSWORD = user.getPassword();
 					SharedData.GENDER = user.getGender();
 					SharedData.EMAIL = user.getEmail();
+					SharedData.PHONE = user.getPhone();
 
 					//Application ¼ÇÂ¼µÇÂ¼×´Ì¬
 					application.setIsLogin(true);

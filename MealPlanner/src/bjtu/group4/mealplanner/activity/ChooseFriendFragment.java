@@ -104,6 +104,7 @@ public class ChooseFriendFragment extends ListFragment {
 					map.put("id", f.getFriendId());
 					map.put("title", f.getFriendNameString());
 					map.put("info", f.getFriendPhone());
+					map.put("more", f.getFriendEmail());
 					map.put("status", -1);
 
 					mData.add(map);
@@ -140,8 +141,6 @@ public class ChooseFriendFragment extends ListFragment {
 			}
 			super.onPostExecute(result);
 		}
-
-
-	}
+	}// AnsyTask Class End
 
 }

@@ -14,6 +14,8 @@ public class SharedData {
 	
 	public static String GENDER = "";
 	
+	public static String PHONE = "";
+	
 	public static String BAIDUUSERID;
 
 	public static String PUSHMESGCHANNELID;
@@ -24,3 +26,4 @@ public class SharedData {
 	
 	
 }
+

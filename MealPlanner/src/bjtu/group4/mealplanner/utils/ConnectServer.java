@@ -8,18 +8,25 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.R.integer;
+import android.R.string;
 import android.util.Log;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Friend;
 import bjtu.group4.mealplanner.model.PushMessageBindInfo;
 import bjtu.group4.mealplanner.model.QueueInfo;
+import bjtu.group4.mealplanner.model.Order;
 import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
-	//	public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
+
 	public static String path = "http://172.28.34.69:8090/mealplanner/";
-	//public static String path = "http://192.16.137.1:8080/mealplanner/";
+	//public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
+	//public static String path = "http://172.28.34.136:8090/mealplanner/";
+	//public static String path = "http://192.16.137.1:8090/mealplanner/";
+	//public static String path = "http://172.28.12.93:8090/mealplanner/";
+
 	/**
 	 * ÓÃ»§µÇÂ¼
 	 * 
@@ -73,8 +80,8 @@ public class ConnectServer {
 		String url = path + "app/rest/getSeveralRestWithMenu?";
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("start", start + "");
-		map.put("end", end + "");
 
+		map.put("limit", end + "");
 		String str = HttpUtils.postData(url, map);
 		try {
 			JSONObject obj = new JSONObject(str);
@@ -104,6 +111,7 @@ public class ConnectServer {
 						food.setFoodPrice(objFood.getDouble("menuprice"));
 						food.setIsHot(objFood.getInt("hot"));
 						food.setFoodType(objFood.getInt("foodtype"));
+						food.setFoodTypeName(objFood.getString("foodTypeName"));
 						foods.add(food);
 					}
 					restaurants.add(rest);
@@ -267,11 +275,11 @@ public class ConnectServer {
 		map.put("channelId", channelId);
 		String str = HttpUtils.postData(url, map);
 
-//		{
-//			"success": true,
-//			"message": "Register userId=2 into baidu userId=924401985 and channel=4236885180925384783 success!",
-//			"data": null
-//			}
+		//		{
+		//			"success": true,
+		//			"message": "Register userId=2 into baidu userId=924401985 and channel=4236885180925384783 success!",
+		//			"data": null
+		//			}
 		try {
 			JSONObject obj = new JSONObject(str);
 			if ((Boolean) obj.get("success")) {
@@ -284,4 +292,86 @@ public class ConnectServer {
 		return false;
 	}
 
+
+	public boolean sendOrder(int restId, String dateTime, String dishesIds, String peopleNum, int mealId, String phoneNum) {
+		int userId = SharedData.USERID;
+		String url = path + "app/order/createOrder?";
+		Map<String, String> map = new HashMap<String, String>();
+
+		map.put("restId", restId+"");
+		map.put("date",dateTime);
+		map.put("userId", userId+"");
+		map.put("menuIds",dishesIds);
+		map.put("peopleNum",peopleNum+"");
+		map.put("phoneNum",phoneNum);
+		if(mealId != -1)
+			map.put("mealId",mealId +"");
+
+		String str = HttpUtils.postData(url, map);
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				Log.d("sendInvitation", "success");
+				return true;
+			}
+			else {
+				Log.d("sendInvitation", "send sendInvitation data fail");
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;		
+	}
+
+	public List<Order> getOrdersAll(int userId) {
+		List<Order> orders = new ArrayList<Order>();
+		String url = path + "app/order/getOrderByUser?";
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId + "");
+
+		String str = HttpUtils.postData(url, map);
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				Log.d("getOrdersAll", "success");
+				JSONArray arrayData = obj.getJSONArray("data");
+				for (int i = 0; i < arrayData.length(); i++) {
+					JSONObject dataObj = arrayData.getJSONObject(i);
+					JSONObject orderObj = dataObj.getJSONObject("orderInfo");
+					Order order = new Order();
+					order.setRestName(dataObj.getString("restName"));
+
+					order.setOrderId(orderObj.getInt("orderid"));
+					order.setMealId(orderObj.getInt("mealid"));
+					order.setRestId(orderObj.getInt("restid"));
+					order.setOrderState(orderObj.getInt("status"));
+					order.setPeopleNum(orderObj.getInt("actualpeoplenum"));
+					order.setPhoneNum(orderObj.getString("contactinfo"));
+					order.setMealTime(orderObj.getLong("mealtime"));
+
+					JSONArray menuArray = dataObj.getJSONArray("menuInfos");
+					List<Food> foods = order.getDishes();
+					for(int j = 0; j < menuArray.length(); ++j) {
+						JSONObject foodObj = menuArray.getJSONObject(j);
+						if(foodObj == null) break;
+						Food food = new Food();
+						food.setFoodId(foodObj.getInt("menuid"));
+						food.setFoodName(foodObj.getString("menuname"));
+						food.setFoodPrice(foodObj.getDouble("menuprice"));
+						food.setFoodTypeName(foodObj.getString("foodTypeName"));
+						food.setIsHot(foodObj.getInt("hot"));
+						foods.add(food);
+					}
+					orders.add(order);
+				}
+			}
+			else {
+				Log.d("getOrdersAll", "can not get friendsAll data");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return orders;
+	}
 }

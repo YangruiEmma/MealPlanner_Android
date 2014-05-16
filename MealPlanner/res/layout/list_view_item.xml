@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal" >
@@ -8,29 +9,56 @@
         android:id="@+id/itemImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:src="@drawable/restaurant" />
 
-     <LinearLayout
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginLeft="10dp"
-         android:orientation="vertical" >
-    
-            <TextView
-                android:id="@+id/itemTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="22px" />
+    <TextView
+        android:id="@+id/itemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/itemImg"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/itemImg"
+        android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/itemInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13px" />
-     
-     </LinearLayout>
+    <TextView
+        android:id="@+id/itemInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/itemImg"
+        android:layout_alignLeft="@+id/itemTitle"
+        android:textSize="10sp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/itemMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/itemInfo"
+        android:layout_alignBottom="@+id/itemInfo"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:textSize="10sp" />
+
+    <ImageView
+        android:id="@+id/itemStatusImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/itemMore"
+        android:layout_alignTop="@+id/itemTitle"
+        android:visibility="invisible"
+        android:src="@drawable/hot" />
+
+    <TextView
+        android:id="@+id/itemNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/itemMore"
+        android:layout_alignBottom="@+id/itemMore"
+        android:layout_marginRight="30dp"
+        android:layout_toLeftOf="@+id/itemMore" />
+
+</RelativeLayout>

@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <Button
@@ -14,7 +14,7 @@
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:background="#FFFFFF"
             android:drawableLeft="@drawable/date"
             android:text="@string/pickDate"
@@ -25,7 +25,7 @@
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:background="#FFFFFF"
             android:drawableLeft="@drawable/time"
             android:text="@string/pickTime"
@@ -35,9 +35,8 @@
             android:id="@+id/email"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:drawableLeft="@drawable/location"
             android:drawablePadding="15dp"
             android:gravity="center|left"
@@ -47,31 +46,83 @@
         <TextView
             android:id="@+id/textViewAddr"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:layout_gravity="center|center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/star"
+            android:drawablePadding="15dp"
+            android:gravity="center|left"
+            android:text="@string/myDishes"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textViewDishes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/TextView6"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:drawableLeft="@drawable/friend"
             android:drawablePadding="15dp"
             android:gravity="center|left"
-            android:text="@string/friend"
+            android:text="@string/contactInfo"
             android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/textViewFriends"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/editPhone"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:textSize="16sp" />
+            android:layout_marginTop="5dp"
+            android:ems="10"
+            android:inputType="phone" >
+
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp" >
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/heart"
+                android:drawablePadding="15dp"
+                android:gravity="center|left"
+                android:text="@string/numOfPeople"
+                android:textSize="22sp" />
+
+            <EditText
+                android:id="@+id/editNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="numberSigned" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnSure"
