@@ -14,6 +14,7 @@ import java.util.Map;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 
 public class HttpUtils {
@@ -49,6 +50,7 @@ public class HttpUtils {
 	           }
 	           
 	           byte[] data = buffer.toString().getBytes();
+
 	           connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 	           connection.setRequestProperty("Content-Length", String.valueOf(data.length));
 	           connection.setRequestProperty("Charset", "UTF-8");

@@ -21,53 +21,52 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class AllOrderList extends Activity implements OnItemClickListener{
+public class AllMealList extends Activity implements OnItemClickListener{
 	private CustomAdapter lAdapter;
 	private ListView mListView;
 	private List<Map<String, Object>> mData;
 	private ProgressDialog progress;
 	private List<Order> orderList;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_all_order);
 		super.onCreate(savedInstanceState);
-		
+
 		bindViewAndSetData();
 	}
-	
+
 	private void bindViewAndSetData() {
 		mData = new ArrayList<Map<String, Object>>();
 		mListView = (ListView)findViewById(R.id.OrderListView);
 		mListView.setOnItemClickListener(this);
-		
-		GetOrderListTask task = new GetOrderListTask();
+
+		GetMealListTask task = new GetMealListTask();
 		task.execute();
-		
+
 		progress = new ProgressDialog(this);
 		progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progress.setTitle("«Î…‘µ»");
-		progress.setMessage("≈¨¡¶º”‘ÿ÷–°£°£°£");
+		progress.setMessage("≈¨¡¶º”‘ÿ÷–...");
 		progress.setIndeterminate(false);
 		progress.setCancelable(true);
 		progress.show();
 	}
-	
+
 	public void onClick(View v) {
-		
+
 	}
-	
-	private class GetOrderListTask extends AsyncTask<Object, Integer, Integer> {
+
+	private class GetMealListTask extends AsyncTask<Object, Integer, Integer> {
 
 		@Override
 		protected Integer doInBackground(Object... params) {
 			int userId = SharedData.USERID;
 
-			orderList = new ConnectServer().getOrdersAll(userId);
+			orderList = new ConnectServer().getMealsAll(userId);
 			if(orderList.size() != 0) {
 				for(int i = 0; i < orderList.size(); ++i) {
 					Order order = orderList.get(i);
@@ -100,7 +99,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 				if(mData.size() > 0)
 				{
 					if(lAdapter == null) {
-						lAdapter = new CustomAdapter(mData, AllOrderList.this);
+						lAdapter = new CustomAdapter(mData, AllMealList.this);
 						mListView.setAdapter(lAdapter);
 					}
 					else {
@@ -111,7 +110,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 				break;
 				// ß∞‹
 			case 0:
-				Toast.makeText(AllOrderList.this, "Õ¯¬Á∑±√¶£¨«Î…‘∫Û‘Ÿ ‘", Toast.LENGTH_LONG).show();
+				Toast.makeText(AllMealList.this, "Õ¯¬Á∑±√¶£¨«Î…‘∫Û‘Ÿ ‘", Toast.LENGTH_LONG).show();
 				break;
 			}
 			super.onPostExecute(result);
@@ -126,7 +125,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 		Log.d("AllOrderList", "onItemClick");
 		if(position > orderList.size()) return;
 		Order order = orderList.get(position);
-		Intent intent = new Intent(this, OrderDetailActivity.class);
+		Intent intent = new Intent(this, MealDetailActivity.class);
 		Bundle mBundle = new Bundle();  
 		mBundle.putSerializable("order",order);  
 		intent.putExtras(mBundle);  

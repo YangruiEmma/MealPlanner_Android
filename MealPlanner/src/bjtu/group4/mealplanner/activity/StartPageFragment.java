@@ -1,6 +1,7 @@
 package bjtu.group4.mealplanner.activity;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,17 +16,22 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import bjtu.group4.mealplanner.R;
-import android.R.bool;
+import bjtu.group4.mealplanner.model.Restaurant;
+import bjtu.group4.mealplanner.utils.ConnectServer;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -51,8 +57,11 @@ OnMyLocationButtonClickListener{
 	private TextView myTextView;
 	private boolean isServiceOk = true;
 	private Location mLocation = new Location("");
-	private final static String TAG = StartPageFragment.class.getName();
+	private List<Restaurant> mRestList;
+	private HashMap<String, Restaurant> mHMReference = new HashMap<String, Restaurant>();
 
+	private final static String TAG = StartPageFragment.class.getName();
+	private static final float UNDEFINED_COLOR = -1;
 	private static final LocationRequest REQUEST = LocationRequest.create()
 			.setInterval(5000)         // 5 seconds
 			.setFastestInterval(16)    // 16ms = 60fps
@@ -62,12 +71,22 @@ OnMyLocationButtonClickListener{
 			Bundle savedInstanceState) {
 		View messageLayout = inflater.inflate(R.layout.fragment_startpage,
 				container, false);
-		
+
 		if(servicesConnected()) {
 			mMapView = (MapView) messageLayout.findViewById(R.id.map);
 			myTextView = (TextView)messageLayout.findViewById(R.id.location);
 			mMapView.onCreate(savedInstanceState);
 			setUpMapIfNeeded();
+			mMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+				@Override
+				public boolean onMarkerClick(Marker marker) {
+					if(!mHMReference.containsKey(marker.getId()))
+						return false;    		
+					Restaurant rest = mHMReference.get(marker.getId());
+					return false;
+				}
+				
+			});    	
 		}
 		return messageLayout;
 	}
@@ -86,19 +105,14 @@ OnMyLocationButtonClickListener{
 	private boolean servicesConnected() {
 		// Check that Google Play services is available
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-		
-		// If Google Play services is available
 		if(ConnectionResult.SUCCESS == resultCode) {
 			Log.d("StartPageFragment", "Google Play services is available.");
 			isServiceOk = true;
 		} else {
-			// Get the error code
 			ConnectionResult connectionResult = new ConnectionResult(resultCode, null);
 			int errorCode = connectionResult.getErrorCode();
-			// Get the error dialog from Google Play services
 			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
 					errorCode, getActivity(), -1);
-			// If Google Play services can provide an error dialog
 			if(errorDialog != null) {
 				errorDialog.show();
 			}
@@ -108,13 +122,10 @@ OnMyLocationButtonClickListener{
 	}
 
 	private void setUpMapIfNeeded() {
-		// Do a null check to confirm that we have not already instantiated the map.
 		if (mMap == null) {
-			// Try to obtain the map from the SupportMapFragment.
 			if(mMapView != null)
 				mMap = mMapView.getMap();
-				MapsInitializer.initialize(getActivity());
-			// Check if we were successful in obtaining the map.
+			MapsInitializer.initialize(getActivity());
 			if (mMap != null) {
 				setUpMap();
 			}
@@ -124,15 +135,12 @@ OnMyLocationButtonClickListener{
 	private void setUpMap() {
 		mMap.setMyLocationEnabled(true);
 		mMap.setOnMyLocationButtonClickListener(this);
-		//mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+
 	}
 
 	private void setUpLocationClientIfNeeded() {
 		if (mLocationClient == null) {
-			mLocationClient = new LocationClient(
-					getActivity().getApplicationContext(),
-					this,  // ConnectionCallbacks
-					this); // OnConnectionFailedListener
+			mLocationClient = new LocationClient(getActivity().getApplicationContext(),this,this);
 		}
 	}
 
@@ -162,18 +170,11 @@ OnMyLocationButtonClickListener{
 		super.onSaveInstanceState(outState);
 		mMapView.onSaveInstanceState(outState);
 	}
-
-	/**
-	 * Implementation of {@link LocationListener}.
-	 */
 	@Override
 	public void onLocationChanged(Location location) {
 		Log.d(TAG,"onLocationChanged");
 	}
 
-	/**
-	 * Callback called when connected to GCore. Implementation of {@link ConnectionCallbacks}.
-	 */
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		mLocationClient.requestLocationUpdates(REQUEST, this);  // LocationListener
@@ -187,18 +188,11 @@ OnMyLocationButtonClickListener{
 		}
 	}
 
-	/**
-	 * Callback called when disconnected from GCore. Implementation of {@link ConnectionCallbacks}.
-	 */
 	@Override
 	public void onDisconnected() {
 		Toast.makeText(getActivity(), "Disconnected. Please re-connect.",
 				Toast.LENGTH_SHORT).show();
 	}
-
-	/**
-	 * Implementation of {@link OnConnectionFailedListener}.
-	 */
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
 		Toast.makeText(getActivity(), "Connection Failure : " + 
@@ -207,46 +201,47 @@ OnMyLocationButtonClickListener{
 
 	@Override
 	public boolean onMyLocationButtonClick() {
-		// Get the current location's latitude & longitude
 		if (mLocationClient != null && mLocationClient.isConnected()) {
-			Location currentLocation = mLocationClient.getLastLocation();
-			if(currentLocation != null) {
+			mLocation = mLocationClient.getLastLocation();
+			if(mLocation != null) {
 				String msg = "Current Location: " +
-						Double.toString(currentLocation.getLatitude()) + "," +
-						Double.toString(currentLocation.getLongitude());
-
-				// Display the current location in the UI
+						Double.toString(mLocation.getLatitude()) + "," +
+						Double.toString(mLocation.getLongitude());
 				myTextView.setText(msg);
 				GetAddressTask task = new GetAddressTask((Context)getActivity());
-				task.execute(currentLocation);
+				task.execute(mLocation);
+				SearchAsyncTask taskSearch = new SearchAsyncTask();
+				taskSearch.execute(mLocation);
+
 			}
 			else {
 				Toast.makeText(getActivity(), "GetLastLocation Failure : ",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
-		// Return false so that we don't consume the event and the default behavior still occurs
-		// (the camera animates to the user's current position).
 		return false;
 	}
 
-	/*
-	 * Following is a subclass of AsyncTask which has been used to get
-	 * address corresponding to the given latitude & longitude.
-	 */
+
+	private Marker drawMarker(LatLng latLng,float color, String titile){
+		MarkerOptions markerOptions = new MarkerOptions();	                  
+		markerOptions.position(latLng); 
+		markerOptions.title(titile);
+		if(color != UNDEFINED_COLOR)
+			markerOptions.icon(BitmapDescriptorFactory.defaultMarker(color));
+		Marker m = mMap.addMarker(markerOptions);
+		return m;     
+
+	}			
+
 	private class GetAddressTask extends AsyncTask<Location, Void, String>{
 		Context mContext;
 		public GetAddressTask(Context context) {
 			super();
 			mContext = context;
 		}
-
-		/*
-		 * When the task finishes, onPostExecute() displays the address. 
-		 */
 		@Override
 		protected void onPostExecute(String address) {
-			// Display the current address in the UI
 			myTextView.setText(address);
 		}
 		@Override
@@ -278,20 +273,52 @@ OnMyLocationButtonClickListener{
 			if (addresses != null && addresses.size() > 0) {
 				// Get the first address
 				Address address = addresses.get(0);
-				/*
-				 * Format the first line of address (if available),
-				 * city, and country name.
-				 */
-				String addressText = String.format("%s, %s, %s, %s, %s",
-						// If there's a street address, add it
+				String addressText = String.format("%s, %s, %s, %s",
 						address.getMaxAddressLineIndex() > 0 ? address.getAddressLine(0) : "",
-								address.getLocality(), address.getSubAdminArea(),
+								address.getLocality(),
 								address.getThoroughfare(), address.getFeatureName());
-				// Return the text
 				return addressText;
 			} else {
 				return "No address found";
 			}
 		}
 	}// AsyncTask class
+	private class SearchAsyncTask extends AsyncTask<Location, Void, List<Restaurant>>{
+
+		@Override
+		protected List<Restaurant> doInBackground(Location... arg0) {
+			Location loc = arg0[0];
+			try {
+				String url = "https://maps.googleapis.com/maps/api/place/search/json?";
+				List<Restaurant> list = new ConnectServer().
+						getNearbyRest(url, loc.getLatitude(), loc.getLongitude());
+				if(list.size() != 0) {
+					return list;
+				}
+			} catch (Exception e) {
+				Log.d("SearchAsyncTask ",e.toString());
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(List<Restaurant> result) {
+			super.onPostExecute(result);
+			mRestList = result;
+			if(mRestList != null) {
+				drawMarker(new LatLng(mLocation.getLatitude(),  mLocation.getLongitude()), 
+						BitmapDescriptorFactory.HUE_GREEN, myTextView.getText().toString());
+				for(int i = 0; i < mRestList.size(); ++i) {
+					Restaurant rest = mRestList.get(i);	           
+					LatLng latLng = new LatLng(rest.getLatitude(), rest.getLongtitude());            		            
+					Marker m = drawMarker(latLng, UNDEFINED_COLOR, rest.getName());           
+					mHMReference.put(m.getId(), rest);
+				}
+			}
+			else {
+				Toast.makeText(getActivity(), "»ñÈ¡¸½½ü²ÍÌüÊ§°Ü£¬Çë¼ì²éÍøÂç ",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
 }
