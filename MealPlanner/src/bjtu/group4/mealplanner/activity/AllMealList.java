@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import bjtu.group4.mealplanner.R;
+import bjtu.group4.mealplanner.model.Meal;
 import bjtu.group4.mealplanner.model.Order;
 import bjtu.group4.mealplanner.utils.ConnectServer;
 import bjtu.group4.mealplanner.utils.CustomAdapter;
@@ -29,7 +30,7 @@ public class AllMealList extends Activity implements OnItemClickListener{
 	private ListView mListView;
 	private List<Map<String, Object>> mData;
 	private ProgressDialog progress;
-	private List<Order> orderList;
+	private List<Meal> mealList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +67,19 @@ public class AllMealList extends Activity implements OnItemClickListener{
 		protected Integer doInBackground(Object... params) {
 			int userId = SharedData.USERID;
 
-			orderList = new ConnectServer().getMealsAll(userId);
-			if(orderList.size() != 0) {
-				for(int i = 0; i < orderList.size(); ++i) {
-					Order order = orderList.get(i);
-					Date date = new Date(order.getMealTime());
+			mealList = new ConnectServer().getMealsAll(userId);
+			if(mealList.size() != 0) {
+				for(int i = 0; i < mealList.size(); ++i) {
+					Meal meal = mealList.get(i);
+					Date date = new Date(meal.getMealTime());
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String dateString = formatter.format(date);
 
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("id", order.getOrderId());
-					map.put("title", order.getRestName());
+					map.put("id", meal.getMealId());
+					map.put("title", meal.getRestName());
 					map.put("info", dateString);
-					map.put("more", order.getStatusString());
+					map.put("more", meal.getStatusString());
 
 					mData.add(map);
 				}
@@ -123,11 +124,11 @@ public class AllMealList extends Activity implements OnItemClickListener{
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
 		// TODO Auto-generated method stub
 		Log.d("AllOrderList", "onItemClick");
-		if(position > orderList.size()) return;
-		Order order = orderList.get(position);
+		if(position > mealList.size()) return;
+		Meal meal = mealList.get(position);
 		Intent intent = new Intent(this, MealDetailActivity.class);
 		Bundle mBundle = new Bundle();  
-		mBundle.putSerializable("order",order);  
+		mBundle.putSerializable("meal",meal);  
 		intent.putExtras(mBundle);  
 		startActivity(intent);
 	}

@@ -54,15 +54,17 @@ public class MyInfoFragment extends Fragment implements OnClickListener {
 	
 	@Override
 	public void onClick(View v) {
+		Intent intent;
 		switch(v.getId()) {
 		case R.id.myFriendTextView:
 			Log.d("MyInfoFragment","onClickmyFriendTextView");
 			break;
 		case R.id.myInvitationTextView:
-			Log.d("MyInfoFragment","onClickmyInvitationTextView");
+			intent = new Intent(getActivity(), AllMealList.class);
+			startActivity(intent);
 			break;
 		case R.id.myOrderTextView:
-			Intent intent = new Intent(getActivity(), AllOrderList.class);
+			intent = new Intent(getActivity(), AllOrderList.class);
 			startActivity(intent);
 			break;
 		default:

@@ -91,8 +91,16 @@
             android:name="bjtu.group4.mealplanner.activity.AllOrderList"
             android:label="@string/title_activity_orderList" >
         </activity>
-         <activity
+        <activity
             android:name="bjtu.group4.mealplanner.activity.OrderDetailActivity"
+            android:label="@string/title_activity_orderDetail" >
+        </activity>
+        <activity
+            android:name="bjtu.group4.mealplanner.activity.AllMealList"
+            android:label="@string/title_activity_orderDetail" >
+        </activity>
+        <activity
+            android:name="bjtu.group4.mealplanner.activity.MealDetailActivity"
             android:label="@string/title_activity_orderDetail" >
         </activity>
         

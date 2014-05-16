@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.util.Log;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Friend;
+import bjtu.group4.mealplanner.model.Meal;
 import bjtu.group4.mealplanner.model.Order;
 import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
@@ -303,46 +304,48 @@ public class ConnectServer {
 		return orders;
 	}
 	
-	public List<Order> getMealsAll(int userId) {
-		List<Order> orders = new ArrayList<Order>();
-		String url = path + "app/order/getOrderByUser?";
+	public List<Meal> getMealsAll(int userId) {
+		List<Meal> meals = new ArrayList<Meal>();
+		String url = path + "app/meal/getMealInfo?";
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("userId", userId + "");
+		map.put("start", 0+"");//start=0&limit=2
+		map.put("limit", 1+"");
 
 		String str = HttpUtils.postData(url, map);
-		try {
+		try { 
 			JSONObject obj = new JSONObject(str);
 			if ((Boolean) obj.get("success")) {
 				Log.d("getMealsAll", "success");
 				JSONArray arrayData = obj.getJSONArray("data");
 				for (int i = 0; i < arrayData.length(); i++) {
 					JSONObject dataObj = arrayData.getJSONObject(i);
-					JSONObject orderObj = dataObj.getJSONObject("orderInfo");
-					Order order = new Order();
-					order.setRestName(dataObj.getString("restName"));
+					JSONObject mealObj = dataObj.getJSONObject("mealInfo");
+					Meal meal = new Meal();
+					meal.setRestName(mealObj.getString("restname"));
+					meal.setMealId(mealObj.getInt("mealid"));
+					meal.setRestId(mealObj.getInt("restid"));
+					meal.setMealState(mealObj.getInt("mealstatus"));
+					meal.setOrganizer(mealObj.getString("mealorganizeusername"));
+					meal.setOrganizerID(mealObj.getInt("mealorganizeuserid"));
+					meal.setOrganizationtime(mealObj.getLong("organizationtime"));
+					meal.setMealTime(mealObj.getLong("mealtime"));
 
-					order.setOrderId(orderObj.getInt("orderid"));
-					order.setMealId(orderObj.getInt("mealid"));
-					order.setRestId(orderObj.getInt("restid"));
-					order.setOrderState(orderObj.getInt("status"));
-					order.setPeopleNum(orderObj.getInt("actualpeoplenum"));
-					order.setPhoneNum(orderObj.getString("contactinfo"));
-					order.setMealTime(orderObj.getLong("mealtime"));
-
-					JSONArray menuArray = dataObj.getJSONArray("menuInfos");
-					List<Food> foods = order.getDishes();
-					for(int j = 0; j < menuArray.length(); ++j) {
-						JSONObject foodObj = menuArray.getJSONObject(j);
-						if(foodObj == null) break;
-						Food food = new Food();
-						food.setFoodId(foodObj.getInt("menuid"));
-						food.setFoodName(foodObj.getString("menuname"));
-						food.setFoodPrice(foodObj.getDouble("menuprice"));
-						food.setFoodTypeName(foodObj.getString("foodTypeName"));
-						food.setIsHot(foodObj.getInt("hot"));
-						foods.add(food);
+					JSONArray mealFriends = dataObj.getJSONArray("mealFriendWithStatusList");
+					Map<Integer, Friend> friendStatusList = meal.getMealFriendList();
+					for(int j = 0; j < mealFriends.length(); ++j) {
+						JSONObject friendObj = mealFriends.getJSONObject(j);
+						Integer status = friendObj.getInt("status");
+						Friend f = new Friend();
+						JSONObject fObj = friendObj.getJSONObject("friendInfo");
+						f.setFriendId(fObj.getInt("userid"));
+						f.setFriendEmail(fObj.getString("email"));
+						f.setFriendNameString(fObj.getString("username"));
+						f.setFriendPhone(fObj.getString("phonenum"));
+						
+						friendStatusList.put(status, f);
 					}
-					orders.add(order);
+					meals.add(meal);
 				}
 			}
 			else {
@@ -351,7 +354,7 @@ public class ConnectServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return orders;
+		return meals;
 	}
 
 	public List<Restaurant> getNearbyRest(String url, double lat, double lont) {
