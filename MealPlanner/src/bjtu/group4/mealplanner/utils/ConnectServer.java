@@ -11,12 +11,14 @@ import org.json.JSONObject;
 import android.util.Log;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Friend;
+import bjtu.group4.mealplanner.model.PushMessageBindInfo;
+import bjtu.group4.mealplanner.model.QueueInfo;
 import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
-	public static String path = "http://59.64.4.63:8080/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
-	//public static String path = "http://172.28.32.75:8080/mealplanner/";
+	//	public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
+	public static String path = "http://172.28.34.69:8090/mealplanner/";
 	//public static String path = "http://192.16.137.1:8080/mealplanner/";
 	/**
 	 * 用户登录
@@ -33,28 +35,32 @@ public class ConnectServer {
 		map.put("loginName", username);
 		map.put("password", password);
 
-		String str = HttpUtils.postData(url, map);
-
 		try {
+			String str = HttpUtils.postData(url, map);
+			if(str == null)
+				return null;
 			JSONObject obj = new JSONObject(str);
+			user = new User();
 			if ((Boolean) obj.get("success")) {
 				JSONObject userinfo = (JSONObject) obj
 						.getJSONObject("data");
 
-				user = new User();
 				user.setId(userinfo.getInt("userid"));
 				user.setUsername(userinfo.getString("username"));
 				user.setPassword(userinfo.getString("password"));
 				user.setEmail(userinfo.getString("email"));
 				user.setPhone(userinfo.getString("phonenum"));
 				user.setUserType(userinfo.getString("usertype"));
+				user.setloginCorrect(true);
+			}else {
+				user.setloginCorrect(false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return user;
 	}
-	
+
 	/**
 	 * 所有餐厅
 	 * 
@@ -68,7 +74,7 @@ public class ConnectServer {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("start", start + "");
 		map.put("end", end + "");
-		
+
 		String str = HttpUtils.postData(url, map);
 		try {
 			JSONObject obj = new JSONObject(str);
@@ -86,13 +92,13 @@ public class ConnectServer {
 					rest.setPosition(objRestInfo.getString("restaddress"));
 					rest.setRestType(objRestInfo.getInt("resttype"));
 					rest.setIsHot(objRestInfo.getInt("hot"));
-					
+
 					List<Food> foods = rest.getDishes();
 					JSONArray foodsArray = dataObj.getJSONArray("menuInfos");
 					for(int j = 0; j < foodsArray.length(); j++) {
 						Food food = new Food();
 						JSONObject objFood = foodsArray.getJSONObject(j);
-						
+
 						food.setFoodId(objFood.getInt("menuid"));
 						food.setFoodName(objFood.getString("menuname"));
 						food.setFoodPrice(objFood.getDouble("menuprice"));
@@ -111,7 +117,7 @@ public class ConnectServer {
 		}
 		return restaurants;
 	}
-	
+
 
 	public Restaurant getRestInfo(String restID) {
 		Restaurant rest = null;
@@ -119,7 +125,7 @@ public class ConnectServer {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("restId", restID);
 		String str = HttpUtils.postData(url, map);
-		
+
 		try {
 			JSONObject obj = new JSONObject(str);
 			if ((Boolean) obj.get("success")) {
@@ -140,7 +146,39 @@ public class ConnectServer {
 		}
 		return rest;
 	}
-	
+
+	public QueueInfo sendQueueMesg(String restID, String userId, String peopleNum) {
+		QueueInfo queueInfo = null;
+		String url = path + "app/seq/insertSeq?"; 
+		Map<String, String> map = new HashMap<String, String>();
+		//restId=3&userId=1&peopleNum=6
+		map.put("restId", restID);
+		map.put("userId", userId);
+		map.put("peopleNum", peopleNum);
+		String str = HttpUtils.postData(url, map);
+
+		//"data":{"userId":1,"restId":3,"seqNo":3,"seqNow":0,"seatType":6,"peopleBefore":2,"peopleNum":6}
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				JSONObject queueMsg = (JSONObject) obj
+						.getJSONObject("data");
+
+				queueInfo = new QueueInfo();
+				queueInfo.setUserId(queueMsg.getInt("userId"));
+				queueInfo.setRestId(queueMsg.getInt("restId"));
+				queueInfo.setSeqNo(queueMsg.getInt("seqNo"));
+				queueInfo.setSeqNow(queueMsg.getInt("seqNow"));
+				queueInfo.setSeatType(queueMsg.getInt("seatType"));
+				queueInfo.setPeopleBefore(queueMsg.getInt("peopleBefore"));
+				queueInfo.setPeopleNum(queueMsg.getInt("peopleNum"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return queueInfo;
+	}
+
 	public String test() {
 		String url = path + "userinfo?";
 		Map<String, String> map = new HashMap<String, String>();
@@ -149,7 +187,7 @@ public class ConnectServer {
 
 		return str;
 	}
-	
+
 	/**
 	 * 所有好友
 	 * 
@@ -162,7 +200,7 @@ public class ConnectServer {
 		String url = path + "app/friend/getAllFriends?";
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("userId", userId + "");
-		
+
 		String str = HttpUtils.postData(url, map);
 		try {
 			JSONObject obj = new JSONObject(str);
@@ -172,13 +210,13 @@ public class ConnectServer {
 				JSONArray objFriendsArray = objData.getJSONArray("userInfos");
 				for (int i = 0; i < objFriendsArray.length(); i++) {
 					JSONObject dataObj = objFriendsArray.getJSONObject(i);
-					
+
 					Friend friend = new Friend();
 					friend.setFriendId(dataObj.getInt("userid"));
 					friend.setFriendNameString(dataObj.getString("username"));
 					friend.setFriendPhone(dataObj.getString("phonenum"));
 					//friend.setFriendEmail(objData.getString("email"));
-					
+
 					friends.add(friend);
 				}
 			}
@@ -195,12 +233,12 @@ public class ConnectServer {
 		int userId = SharedData.USERID;
 		String url = path + "app/meal/createMeal?";
 		Map<String, String> map = new HashMap<String, String>();
-		
+
 		map.put("restId", restId+"");
 		map.put("datetime",dateTime);
 		map.put("userId", userId+"");
 		map.put("friendIds",friendIds);
-		
+
 		String str = HttpUtils.postData(url, map);
 		try {
 			JSONObject obj = new JSONObject(str);
@@ -217,4 +255,33 @@ public class ConnectServer {
 		}
 		return false;		
 	}
+
+	//http://localhost:8090/mealplanner/app/userBinding?userId=2&baiduUserId=924401985&channelId=4236885180925384783
+	public boolean bindBaiduUser(String userId, String baiduUserId, String channelId) {
+		PushMessageBindInfo bindInfo = null;
+		String url = path + "app/userBinding?"; 
+		Map<String, String> map = new HashMap<String, String>();
+
+		map.put("userId", userId);
+		map.put("baiduUserId", baiduUserId);
+		map.put("channelId", channelId);
+		String str = HttpUtils.postData(url, map);
+
+//		{
+//			"success": true,
+//			"message": "Register userId=2 into baidu userId=924401985 and channel=4236885180925384783 success!",
+//			"data": null
+//			}
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return false;
+	}
+
 }

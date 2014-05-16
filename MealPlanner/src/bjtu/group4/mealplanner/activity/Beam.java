@@ -3,10 +3,9 @@ package bjtu.group4.mealplanner.activity;
 import java.io.IOException;
 
 import bjtu.group4.mealplanner.R;
+import bjtu.group4.mealplanner.model.QueueInfo;
 import bjtu.group4.mealplanner.model.Restaurant;
-import bjtu.group4.mealplanner.model.User;
 import bjtu.group4.mealplanner.utils.ConnectServer;
-import bjtu.group4.mealplanner.utils.SharedData;
 
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -21,14 +20,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.text.InputFilter;
-import android.text.Spanned;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,17 +36,22 @@ public class Beam extends Activity {
 
 	private TextView promt; 
 	private EditText personNum;
-	private LinearLayout lineLayout;
-	private Button btn_line;
+	private LinearLayout lineLayout1;
+	private LinearLayout lineLayout2;
+	private Button btnLine;
+	private Button btnHome;
 
 	private String restaurantID = "";
+	MealApplication application;
 	Restaurant rest;
+	QueueInfo queueInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_beam);
-
+		application = (MealApplication) getApplication();
+		
 		bindViews();
 		// 获取默认的NFC控制器  
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);  
@@ -74,36 +72,65 @@ public class Beam extends Activity {
 	private void bindViews() {
 		promt = (TextView) findViewById(R.id.promt); 
 		personNum = (EditText) findViewById(R.id.personNum); 
-		lineLayout = (LinearLayout)findViewById(R.id.lineLayout); 
-		lineLayout.setVisibility(View.INVISIBLE);
-		btn_line = (Button)findViewById(R.id.btn_line);
+		lineLayout1 = (LinearLayout)findViewById(R.id.nfcLineLayout1); 
+		lineLayout2 = (LinearLayout)findViewById(R.id.nfcLineLayout2); 
+		lineLayout1.setVisibility(View.INVISIBLE);
+		lineLayout2.setVisibility(View.INVISIBLE);
+		btnLine = (Button)findViewById(R.id.nfcBtnLine);
+		btnHome = (Button)findViewById(R.id.nfcBtnHome);
 	}
 
 	private void setListener() {
-		btn_line.setOnClickListener(new OnClickListener() {
+		btnLine.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder= new AlertDialog.Builder(Beam.this);
-				builder.setTitle("确认排队")
-				.setIcon(android.R.drawable.ic_dialog_info)
-				.setMessage("是否确认现在排队用餐吗?").setPositiveButton("是", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
+				String numString = personNum.getText().toString();
+				if ("".equals(numString)) {
+					AlertDialog.Builder builder= new AlertDialog.Builder(Beam.this);
+					builder.setTitle("提示")
+					.setIcon(android.R.drawable.ic_dialog_info)
+					.setMessage("请先输入用餐人数哦，亲！").create()
+					.show();
+				} else if (Integer.parseInt(numString) > 10) {
+					AlertDialog.Builder builder= new AlertDialog.Builder(Beam.this);
+					builder.setTitle("提示")
+					.setIcon(android.R.drawable.ic_dialog_info)
+					.setMessage("抱歉，用餐人数过多，请在服务台预定！").create()
+					.show();
+				} else {
+					AlertDialog.Builder builder= new AlertDialog.Builder(Beam.this);
+					builder.setTitle("确认排队")
+					.setIcon(android.R.drawable.ic_dialog_info)
+					.setMessage("是否确认现在排队用餐?").setPositiveButton("是", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							// 准备发送排队服务
+							sendQueueMesg();
+						}
+					}).setNegativeButton("否", null).create()
+					.show();
+				}
+			}
+		});
 
-					}
-				}).setNegativeButton("否", null).create();
-				builder.show();
+		btnHome.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(Beam.this, MainActivity.class);
+				startActivity(intent);
+				Beam.this.finish();
 			}
 		});
 	}
-	
+
 	@Override  
 	protected void onResume() {  
-		super.onResume();  
+		super.onResume();
 		//to see if user login
-		MealApplication application = (MealApplication) getApplication();
-		if (!application.getIsLogin()) {
+		if (application != null && !application.getIsLogin()) {
 			promt.setText("未登录，请先登录！");  
 			waitToLogin();
 		}//得到是否检测到ACTION_TECH_DISCOVERED触发  
@@ -191,7 +218,8 @@ public class Beam extends Activity {
 			switch(response){
 			case 1:
 				promt.setText("欢迎到"+rest.getName()+"餐厅用餐");
-				lineLayout.setVisibility(View.VISIBLE);
+				lineLayout1.setVisibility(View.VISIBLE);
+				lineLayout2.setVisibility(View.VISIBLE);
 				//					line_txt.setTextColor(android.graphics.Color.BLACK);
 				//					person_txt.setTextColor(android.graphics.Color.BLACK);
 				//					personNum.setFilters(new InputFilter[] {  
@@ -205,9 +233,72 @@ public class Beam extends Activity {
 				//				            }  
 				//				        });  
 				break;
-				//登陆失败
+
 			case 0:
 				Toast.makeText(Beam.this, "获取服务器餐厅信息失败", Toast.LENGTH_LONG).show();
+				break;
+			}
+		}
+	}
+
+	/**
+	 * 向服务器发送排队消息
+	 * 
+	 */
+	private void sendQueueMesg() {
+		SendQueueMesgTask task = new SendQueueMesgTask();
+		progress = new ProgressDialog(Beam.this);
+		progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progress.setTitle("请稍等");
+		progress.setMessage("正在发送排队消息");
+		// 设置ProgressDialog 的进度条是否不明确 false 就是不设置为不明确
+		progress.setIndeterminate(false);
+		// 设置ProgressDialog 是否可以按退回键取消
+		progress.setCancelable(true);
+		progress.show();
+
+		//异步获取餐厅信息
+		task.execute(restaurantID, application.getUserId(), personNum.getText().toString());//restId=3&userId=1&peopleNum=6
+	}
+
+	private class SendQueueMesgTask extends AsyncTask<Object, Integer, Integer>{
+
+		/**
+		 * 执行异步任务时回调，在Ui线程外执行
+		 * */
+		@Override
+		protected Integer doInBackground(Object... params) {
+			String restID = (String)params[0];
+			String userID =  params[1].toString();
+			String peopleNum = (String)params[2];
+
+			queueInfo = new ConnectServer().sendQueueMesg(restID,userID,peopleNum);
+
+			if(queueInfo!=null){
+				return new Integer(1);
+			}else{
+				return new Integer(0);
+
+			}
+		}
+
+		@SuppressLint("UseValueOf")
+		@Override
+		protected void onPostExecute(Integer result) {
+			progress.cancel();
+			int response = result.intValue();
+			switch(response){
+			case 1:
+				Toast.makeText(Beam.this, "您已经开始排队啦", Toast.LENGTH_LONG).show();
+				Intent intent = new Intent();
+				intent.setClass(Beam.this, MainActivity.class);
+				intent.putExtra("LineUp", true); 
+				startActivity(intent);
+				Beam.this.finish();
+				break;
+
+			case 0:
+				Toast.makeText(Beam.this, "排队失败", Toast.LENGTH_LONG).show();
 				break;
 			}
 		}

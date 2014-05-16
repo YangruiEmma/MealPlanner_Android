@@ -62,21 +62,18 @@ public class HttpUtils {
 	              return getContext(inputStream, "utf-8");
 	           }
 	       } catch (MalformedURLException e) {
-	           // TODO Auto-generated catch block
 	           e.printStackTrace();
 	       } catch (IOException e) {
-	           // TODO Auto-generated catch block
 	           e.printStackTrace();
 	       }catch (Exception e) {
-	           // TODO Auto-generated catch block
 	           e.printStackTrace();
 	       } finally {
 	           try {
 	              inputStream.close();
 	              outputStream.close();
-	           } catch (IOException e) {
-	               // TODO Auto-generated catch block
-	              e.printStackTrace();
+	           } catch (Exception e) {
+	        	   e.printStackTrace();
+	              return null;
 	           }
 	 
 	       }
@@ -100,7 +97,6 @@ public class HttpUtils {
 				try {
 					is.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
