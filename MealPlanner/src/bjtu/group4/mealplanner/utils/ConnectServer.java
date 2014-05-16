@@ -8,10 +8,14 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.android.gms.internal.is;
+
+import android.R.integer;
 import android.util.Log;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Friend;
 import bjtu.group4.mealplanner.model.Meal;
+import bjtu.group4.mealplanner.model.MealFriend;
 import bjtu.group4.mealplanner.model.Order;
 import bjtu.group4.mealplanner.model.PushMessageBindInfo;
 import bjtu.group4.mealplanner.model.QueueInfo;
@@ -19,8 +23,8 @@ import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
-	//public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
-	public static String path = "http://172.28.34.69:8090/mealplanner/";
+	public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
+	//public static String path = "http://172.28.34.69:8090/mealplanner/";
 	//public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
 	//public static String path = "http://172.28.34.136:8090/mealplanner/";
 	//public static String path = "http://192.16.137.1:8090/mealplanner/";
@@ -322,6 +326,34 @@ public class ConnectServer {
 		return false;		
 	}
 
+	public boolean sendInvitationReply(int mealId, boolean isAccept) {
+		int userId = SharedData.USERID;
+		String url = "";
+		if(isAccept) {
+			url = path + "app/meal/acceptMeal?";
+		}else {
+			url = path + "app/meal/rejectMeal?";
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId+"");
+		map.put("mealId",mealId+"");
+		
+		String str = HttpUtils.postData(url, map);
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				Log.d("sendInvitationReply", "success");
+				return true;
+			}
+			else {
+				Log.d("sendInvitationReply", "send sendInvitation data fail");
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;		
+	}
 	public List<Order> getOrdersAll(int userId) {
 		List<Order> orders = new ArrayList<Order>();
 		String url = path + "app/order/getOrderByUser?";
@@ -379,7 +411,7 @@ public class ConnectServer {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("userId", userId + "");
 		map.put("start", 0+"");//start=0&limit=2
-		map.put("limit", 1+"");
+		map.put("limit", 5+"");
 
 		String str = HttpUtils.postData(url, map);
 		try { 
@@ -401,24 +433,62 @@ public class ConnectServer {
 					meal.setMealTime(mealObj.getLong("mealtime"));
 
 					JSONArray mealFriends = dataObj.getJSONArray("mealFriendWithStatusList");
-					Map<Integer, Friend> friendStatusList = meal.getMealFriendList();
+					List<MealFriend> friendStatusList = meal.getMealFriendList();
 					for(int j = 0; j < mealFriends.length(); ++j) {
 						JSONObject friendObj = mealFriends.getJSONObject(j);
-						Integer status = friendObj.getInt("status");
-						Friend f = new Friend();
+						MealFriend f = new MealFriend();
+						f.setStatus(friendObj.getInt("status"));
 						JSONObject fObj = friendObj.getJSONObject("friendInfo");
-						f.setFriendId(fObj.getInt("userid"));
-						f.setFriendEmail(fObj.getString("email"));
-						f.setFriendNameString(fObj.getString("username"));
-						f.setFriendPhone(fObj.getString("phonenum"));
+						f.getmFriend().setFriendId(fObj.getInt("userid"));
+						f.getmFriend().setFriendEmail(fObj.getString("email"));
+						f.getmFriend().setFriendNameString(fObj.getString("username"));
+						f.getmFriend().setFriendPhone(fObj.getString("phonenum"));
 						
-						friendStatusList.put(status, f);
+						friendStatusList.add(f);
 					}
 					meals.add(meal);
 				}
 			}
 			else {
 				Log.d("getMealsAll", "can not get friendsAll data");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return meals;
+	}
+	
+	public List<Meal> getMealRequestsAll(int userId) {
+		List<Meal> meals = new ArrayList<Meal>();
+		String url = path + "app/meal/getMealRequest?";
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("userId", userId + "");
+
+		String str = HttpUtils.postData(url, map);
+		try { 
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				Log.d("getMealRequestsAll", "success");
+				JSONArray arrayData = obj.getJSONArray("data");
+				for (int i = 0; i < arrayData.length(); i++) {
+					JSONObject dataObj = arrayData.getJSONObject(i);
+					Meal meal = new Meal();
+					meal.setRestName(dataObj.getString("restname"));
+					meal.setMealId(dataObj.getInt("mealid"));
+					meal.setRestId(dataObj.getInt("restid"));
+					meal.setMealState(dataObj.getInt("mealstatus"));
+					meal.setOrganizer(dataObj.getString("mealorganizeusername"));
+					meal.setOrganizerID(dataObj.getInt("mealorganizeuserid"));
+					meal.setOrganizationtime(dataObj.getLong("organizationtime"));
+					meal.setMealTime(dataObj.getLong("mealtime"));
+					MealFriend mf = new MealFriend();
+					mf.setStatus(dataObj.getInt("status"));
+					meal.getMealFriendList().add(mf);
+					meals.add(meal);
+				}
+			}
+			else {
+				Log.d("getMealRequestsAll", "can not get friendsAll data");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -433,7 +503,7 @@ public class ConnectServer {
 		sb.append("location="+lat+","+lont);
 		sb.append("&radius=500");
 		sb.append("&types=food");
-		sb.append("&language=CN");
+		sb.append("&language=zh_CN");
 		sb.append("&sensor=true");
 		sb.append("&key=AIzaSyAZbSZ3PPodBqqxzJKsyFtitoprzIRIQWI");
 		String str = HttpUtils.postData(sb.toString(), map);

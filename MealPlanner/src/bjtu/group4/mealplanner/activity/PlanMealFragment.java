@@ -57,10 +57,8 @@ public class PlanMealFragment extends ListFragment {
 		progress = new ProgressDialog(getActivity());
 		progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progress.setTitle("请稍等");
-		progress.setMessage("努力加载中。。。");
-		// 设置ProgressDialog 的进度条是否不明确 false 就是不设置为不明确
+		progress.setMessage("努力加载中....");
 		progress.setIndeterminate(false);
-		// 设置ProgressDialog 是否可以按退回键取消
 		progress.setCancelable(true);
 		progress.show();
 	}
@@ -69,7 +67,7 @@ public class PlanMealFragment extends ListFragment {
 	public void AddDataToListView() {	
 		startIndex += 10;
 		GetRestListTask task = new GetRestListTask();
-		task.execute(startIndex + 1 , startIndex + 10);
+		task.execute(startIndex + 1 , startIndex + 5);
 	}
 
 	@Override  

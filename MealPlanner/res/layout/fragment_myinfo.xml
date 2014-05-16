@@ -33,7 +33,7 @@
                 android:textSize="22sp" />
 
             <TextView
-                android:id="@+id/textPhone"
+                android:id="@+id/textOrganizer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageViewBack"
@@ -86,6 +86,7 @@
                 android:layout_alignBaseline="@+id/textView4"
                 android:layout_alignBottom="@+id/textView4"
                 android:layout_alignLeft="@+id/phoneNum" />
+
         </RelativeLayout>
 
         <TextView
@@ -123,6 +124,19 @@
             android:drawableRight="@drawable/more"
             android:gravity="center"
             android:text="@string/myOrder" />
+
+        <TextView
+            android:id="@+id/MyMealsTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:drawableLeft="@drawable/star"
+            android:drawableRight="@drawable/more"
+            android:gravity="center"
+            android:text="@string/title_activity_mealList" />
+
     </LinearLayout>
 
 </ScrollView>

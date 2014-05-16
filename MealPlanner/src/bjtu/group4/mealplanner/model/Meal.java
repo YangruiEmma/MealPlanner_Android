@@ -2,14 +2,7 @@ package bjtu.group4.mealplanner.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.google.android.gms.maps.MapsInitializer;
-
-import android.R.integer;
-import android.R.string;
 
 public class Meal implements Serializable {
 
@@ -22,7 +15,7 @@ public class Meal implements Serializable {
 	private String restName;
 	private long mealTime;
 	private long organizationtime;
-	Map<Integer, Friend> mealFriendList = new HashMap<Integer, Friend>();
+	List<MealFriend> mealFriendList = new ArrayList<MealFriend>();
 	
 	public int getMealId() {
 		return mealId;
@@ -73,7 +66,7 @@ public class Meal implements Serializable {
 	public void setOrganizationtime(long organizationtime) {
 		this.organizationtime = organizationtime;
 	}
-	public Map<Integer, Friend> getMealFriendList() {
+	public List<MealFriend> getMealFriendList() {
 		return mealFriendList;
 	}
 	
@@ -81,13 +74,13 @@ public class Meal implements Serializable {
 		String s = "";
 		switch (mealState) {
 		case ONGOING:
-			s = "进行中";
+			s = "还有人没同意呐";
 			break;
 		case EXPIRE:
-			s = "过期";
+			s = "有人拒绝了你";
 			break;
 		case SUCCESS:
-			s = "审核通过";
+			s = "大家都同意啦";
 			break;
 		default:
 			break;
@@ -98,6 +91,5 @@ public class Meal implements Serializable {
 	public static final int ONGOING = 0;
 	public static final int SUCCESS = 1;
 	public static final int EXPIRE = 2;
-	
 	
 }

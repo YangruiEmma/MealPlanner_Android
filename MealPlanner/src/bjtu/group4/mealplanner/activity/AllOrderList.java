@@ -111,7 +111,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 				break;
 				//失败
 			case 0:
-				Toast.makeText(AllOrderList.this, "网络繁忙，请稍后再试", Toast.LENGTH_LONG).show();
+				Toast.makeText(AllOrderList.this, "目前没有订单耶~去下订单吧", Toast.LENGTH_LONG).show();
 				break;
 			}
 			super.onPostExecute(result);

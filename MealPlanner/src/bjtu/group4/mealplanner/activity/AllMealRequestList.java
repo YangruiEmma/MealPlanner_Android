@@ -9,6 +9,7 @@ import java.util.Map;
 
 import bjtu.group4.mealplanner.R;
 import bjtu.group4.mealplanner.model.Meal;
+import bjtu.group4.mealplanner.model.MealFriend;
 import bjtu.group4.mealplanner.utils.ConnectServer;
 import bjtu.group4.mealplanner.utils.CustomAdapter;
 import bjtu.group4.mealplanner.utils.SharedData;
@@ -25,7 +26,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class AllMealList extends Activity implements OnItemClickListener{
+public class AllMealRequestList extends Activity implements OnItemClickListener {
 	private CustomAdapter lAdapter;
 	private ListView mListView;
 	private List<Map<String, Object>> mData;
@@ -44,11 +45,11 @@ public class AllMealList extends Activity implements OnItemClickListener{
 	private void bindViewAndSetData() {
 		mData = new ArrayList<Map<String, Object>>();
 		mButton = (Button)findViewById(R.id.sure);
-		mButton.setText("去组饭局");
+		mButton.setVisibility(View.INVISIBLE);
 		mListView = (ListView)findViewById(R.id.OrderListView);
 		mListView.setOnItemClickListener(this);
 
-		GetMealListTask task = new GetMealListTask();
+		GetMealRequestListTask task = new GetMealRequestListTask();
 		task.execute();
 
 		progress = new ProgressDialog(this);
@@ -59,30 +60,31 @@ public class AllMealList extends Activity implements OnItemClickListener{
 		progress.setCancelable(true);
 		progress.show();
 	}
-
-	public void onClick(View v) {
-		
-	}
-
-	private class GetMealListTask extends AsyncTask<Object, Integer, Integer> {
+	
+	private class GetMealRequestListTask extends AsyncTask<Object, Integer, Integer> {
 
 		@Override
 		protected Integer doInBackground(Object... params) {
 			int userId = SharedData.USERID;
 
-			mealList = new ConnectServer().getMealsAll(userId);
+			mealList = new ConnectServer().getMealRequestsAll(userId);
 			if(mealList.size() != 0) {
 				for(int i = 0; i < mealList.size(); ++i) {
 					Meal meal = mealList.get(i);
 					Date date = new Date(meal.getMealTime());
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String dateString = formatter.format(date);
+					String statusString = "";
+					if(meal.getMealFriendList().size() > 0) {
+						MealFriend mf = meal.getMealFriendList().get(0);
+						statusString = mf.getStatusString();
+					}
 
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("id", meal.getMealId());
 					map.put("title", meal.getRestName());
 					map.put("info", dateString);
-					map.put("more", meal.getStatusString());
+					map.put("more", statusString);
 
 					mData.add(map);
 				}
@@ -103,7 +105,7 @@ public class AllMealList extends Activity implements OnItemClickListener{
 				if(mData.size() > 0)
 				{
 					if(lAdapter == null) {
-						lAdapter = new CustomAdapter(mData, AllMealList.this);
+						lAdapter = new CustomAdapter(mData, AllMealRequestList.this);
 						mListView.setAdapter(lAdapter);
 					}
 					else {
@@ -114,7 +116,7 @@ public class AllMealList extends Activity implements OnItemClickListener{
 				break;
 				//失败
 			case 0:
-				Toast.makeText(AllMealList.this, "目前没有饭局耶~快去组个饭局吧", Toast.LENGTH_LONG).show();
+				Toast.makeText(AllMealRequestList.this, "您还没有被邀请过~", Toast.LENGTH_LONG).show();
 				break;
 			}
 			super.onPostExecute(result);
@@ -129,11 +131,10 @@ public class AllMealList extends Activity implements OnItemClickListener{
 		Log.d("AllOrderList", "onItemClick");
 		if(position > mealList.size()) return;
 		Meal meal = mealList.get(position);
-		Intent intent = new Intent(this, MealDetailActivity.class);
+		Intent intent = new Intent(this, InvitationDetailActivity.class);
 		Bundle mBundle = new Bundle();  
-		mBundle.putSerializable("meal",meal);  
+		mBundle.putSerializable("invitation",meal);  
 		intent.putExtras(mBundle);  
 		startActivity(intent);
 	}
-	
 }

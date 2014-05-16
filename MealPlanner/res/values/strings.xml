@@ -12,6 +12,10 @@
     <string name="title_activity_order">在线订餐</string>
     <string name="title_activity_orderList">我的订单</string>
     <string name="title_activity_orderDetail">订单详情</string>
+    <string name="title_activity_mealList">我的饭局</string>
+    <string name="title_activity_mealDetail">饭局详情</string>
+    <string name="title_activity_InvitationDetail">邀请详情</string>
+    <string name="title_activity_InvitationList">我的邀请</string>
     <string name="startPage">首页</string>
     <string name="planMeal">组饭局</string>
     <string name="lineUp">排排队</string>
@@ -36,6 +40,9 @@
 	<string name="imgContentUser">userImage</string>
 	<string name="createOrder">创建订单</string>
 	<string name="cancleOrder">取消订单</string>
+	<string name="accept">接受邀请</string>
+	<string name="refuse">拒绝邀请</string>
+	<string name="organizer">邀请发起人</string>
 	
     <string name="nfc_prompt">手机接触NFC设备</string>
     <string name="lineTxt">请输入用餐人数:</string>

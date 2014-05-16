@@ -49,6 +49,10 @@ public class MainActivity extends Activity implements OnClickListener {
 					PushConstants.LOGIN_TYPE_API_KEY, 
 					PushMesgUtils.getMetaValue(MainActivity.this, "api_key"));
 			Log.d("Meal", "after start work at " + Calendar.getInstance().getTimeInMillis());
+			setContentView(R.layout.activity_main);
+			initViews();  
+			fragmentManager = getFragmentManager();  
+			setTabSelection(0);  
 		}
 		else {
 

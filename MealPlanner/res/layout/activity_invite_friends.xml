@@ -10,11 +10,39 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/textOrderId"
+            android:id="@+id/textMealId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="TextView" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/TextView03"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/friend"
+                android:drawablePadding="15dp"
+                android:gravity="center|left"
+                android:text="@string/organizer"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/textOrganizer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textSize="22sp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textDate"
@@ -23,6 +51,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:drawableLeft="@drawable/date"
+            android:drawablePadding="15dp"
             android:textSize="22sp" />
 
         <TextView
@@ -41,7 +70,7 @@
             android:id="@+id/textViewAddr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="5dp"
             android:textSize="16sp" />
 
@@ -54,80 +83,45 @@
             android:drawableLeft="@drawable/star"
             android:drawablePadding="15dp"
             android:gravity="center|left"
-            android:text="@string/myDishes"
+            android:text="@string/myfriends"
             android:textSize="22sp" />
 
         <TextView
-            android:id="@+id/textViewDishes"
+            android:id="@+id/textViewFriends"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="5dp"
             android:textSize="16sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp" >
-
-            <TextView
-                android:id="@+id/TextView03"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/friend"
-                android:drawablePadding="15dp"
-                android:gravity="center|left"
-                android:text="@string/phoneNum"
-                android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/textOrganizer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="TextView" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp" >
-
-            <TextView
-                android:id="@+id/MyMealTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:drawableLeft="@drawable/heart"
-                android:drawablePadding="15dp"
-                android:gravity="center|left"
-                android:text="@string/numOfPeople"
-                android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/textNum"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="TextView" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnGoOrder"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="20dp"
-            android:background="#DC143C"
-            android:text="@string/cancleOrder"
-            android:textColor="#FFFFFF" />
+            android:layout_height="50dp" >
 
+            <Button
+                android:id="@+id/btnAccept"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="#DC143C"
+                android:text="@string/accept"
+                android:textColor="#FFFFFF" 
+                android:onClick="onClick"/>
+
+            <Button
+                android:id="@+id/btnRefuse"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="#DC143C"
+                android:text="@string/refuse"
+                android:textColor="#FFFFFF"
+                android:onClick="onClick" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

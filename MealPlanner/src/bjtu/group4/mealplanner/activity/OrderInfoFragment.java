@@ -54,7 +54,7 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 		numEditText = (EditText)v.findViewById(R.id.editNum);
 		pickDateBtn = (Button)v.findViewById(R.id.btnChooseDate);
 		pickTimeBtn = (Button)v.findViewById(R.id.btnChooseTime);
-		sureBtn = (Button)v.findViewById(R.id.btnSure);
+		sureBtn = (Button)v.findViewById(R.id.btnGoOrder);
 
 		pickDateBtn.setOnClickListener(this);
 		pickTimeBtn.setOnClickListener(this);
@@ -87,7 +87,7 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 			DialogFragment tf = new OrderTimePickerFragment(); 
 			tf.show(getFragmentManager(), "TimePicker"); 
 			break;  
-		case R.id.btnSure:  	
+		case R.id.btnGoOrder:  	
 			if(dateString == "" ) {
 				Toast.makeText(getActivity(), "«Î—°‘Ò»’∆⁄", Toast.LENGTH_LONG).show();
 			}
