@@ -14,7 +14,6 @@ import java.util.Map;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 
 public class HttpUtils {
@@ -50,7 +49,6 @@ public class HttpUtils {
 	           }
 	           
 	           byte[] data = buffer.toString().getBytes();
-
 	           connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 	           connection.setRequestProperty("Content-Length", String.valueOf(data.length));
 	           connection.setRequestProperty("Charset", "UTF-8");
@@ -64,21 +62,18 @@ public class HttpUtils {
 	              return getContext(inputStream, "utf-8");
 	           }
 	       } catch (MalformedURLException e) {
-	           // TODO Auto-generated catch block
 	           e.printStackTrace();
 	       } catch (IOException e) {
-	           // TODO Auto-generated catch block
 	           e.printStackTrace();
 	       }catch (Exception e) {
-	           // TODO Auto-generated catch block
 	           e.printStackTrace();
 	       } finally {
 	           try {
 	              inputStream.close();
 	              outputStream.close();
-	           } catch (IOException e) {
-	               // TODO Auto-generated catch block
-	              e.printStackTrace();
+	           } catch (Exception e) {
+	        	   e.printStackTrace();
+	              return null;
 	           }
 	 
 	       }
@@ -102,7 +97,6 @@ public class HttpUtils {
 				try {
 					is.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

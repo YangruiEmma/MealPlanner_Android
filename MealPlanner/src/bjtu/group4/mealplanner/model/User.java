@@ -11,6 +11,7 @@ public class User {
 	private String phone;
 	private String registerDate;
 	private String userType;
+	private boolean loginCorrect;
 	
 	public int getId() {
 		return id;
@@ -71,6 +72,12 @@ public class User {
 	}
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+	public boolean isloginCorrect() {
+		return loginCorrect;
+	}
+	public void setloginCorrect(boolean loginCorrect) {
+		this.loginCorrect = loginCorrect;
 	}
 	
 	

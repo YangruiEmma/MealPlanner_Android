@@ -4,10 +4,85 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/restName"
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/view"
+        android:src="@drawable/lineupimage" />
+
+    <ImageView
+        android:id="@+id/img_noLineUpMesg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="lineup" />
+        android:layout_gravity="center"
+        android:contentDescription="@string/view"
+        android:src="@drawable/sorry_big" />
+
+    <TextView
+        android:id="@+id/txt_lineupMesg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/lineUpMsg2" 
+        android:textSize="8pt"/>
+
+    <LinearLayout
+        android:id="@+id/layout_mesgGetTime"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1.0" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:gravity="center"
+            android:text="@string/lineUpMesgTime" />
+
+        <TextView
+            android:id="@+id/txt_mesgGetTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/lineUpTime" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dp" >
+
+        <Button
+            android:id="@+id/btn_lineUpSee"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="#DC143C"
+            android:drawableLeft="@drawable/info"
+            android:gravity="center"
+            android:text="@string/lineUpSee"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btn_lineUpCancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="#DC143C"
+            android:drawableLeft="@drawable/lineup_cancel"
+            android:text="@string/lineUpCancel"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
 
 </LinearLayout>

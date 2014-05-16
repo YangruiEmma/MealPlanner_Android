@@ -16,7 +16,14 @@ public class SharedData {
 	
 	public static String PHONE = "";
 	
+	public static String BAIDUUSERID;
+
+	public static String PUSHMESGCHANNELID;
+	
 	public static int MSGNUM;//未读消息数
 	
 	public static int FRINUM;//好友在线书
+	
+	
 }
+

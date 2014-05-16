@@ -13,14 +13,19 @@ import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Friend;
 import bjtu.group4.mealplanner.model.Meal;
 import bjtu.group4.mealplanner.model.Order;
+import bjtu.group4.mealplanner.model.PushMessageBindInfo;
+import bjtu.group4.mealplanner.model.QueueInfo;
 import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
 	//public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
 	public static String path = "http://172.28.34.69:8090/mealplanner/";
+	//public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
+	//public static String path = "http://172.28.34.136:8090/mealplanner/";
 	//public static String path = "http://192.16.137.1:8090/mealplanner/";
 	//public static String path = "http://172.28.12.93:8090/mealplanner/";
+
 	/**
 	 * ÓÃ»§µÇÂ¼
 	 * 
@@ -36,21 +41,25 @@ public class ConnectServer {
 		map.put("loginName", username);
 		map.put("password", password);
 
-		String str = HttpUtils.postData(url, map);
-
 		try {
+			String str = HttpUtils.postData(url, map);
+			if(str == null)
+				return null;
 			JSONObject obj = new JSONObject(str);
+			user = new User();
 			if ((Boolean) obj.get("success")) {
 				JSONObject userinfo = (JSONObject) obj
 						.getJSONObject("data");
 
-				user = new User();
 				user.setId(userinfo.getInt("userid"));
 				user.setUsername(userinfo.getString("username"));
 				user.setPassword(userinfo.getString("password"));
 				user.setEmail(userinfo.getString("email"));
 				user.setPhone(userinfo.getString("phonenum"));
 				user.setUserType(userinfo.getString("usertype"));
+				user.setloginCorrect(true);
+			}else {
+				user.setloginCorrect(false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,7 +80,6 @@ public class ConnectServer {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("start", start + "");
 		map.put("limit", end + "");
-
 		String str = HttpUtils.postData(url, map);
 		try {
 			JSONObject obj = new JSONObject(str);
@@ -143,6 +151,38 @@ public class ConnectServer {
 			e.printStackTrace();
 		}
 		return rest;
+	}
+
+	public QueueInfo sendQueueMesg(String restID, String userId, String peopleNum) {
+		QueueInfo queueInfo = null;
+		String url = path + "app/seq/insertSeq?"; 
+		Map<String, String> map = new HashMap<String, String>();
+		//restId=3&userId=1&peopleNum=6
+		map.put("restId", restID);
+		map.put("userId", userId);
+		map.put("peopleNum", peopleNum);
+		String str = HttpUtils.postData(url, map);
+
+		//"data":{"userId":1,"restId":3,"seqNo":3,"seqNow":0,"seatType":6,"peopleBefore":2,"peopleNum":6}
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				JSONObject queueMsg = (JSONObject) obj
+						.getJSONObject("data");
+
+				queueInfo = new QueueInfo();
+				queueInfo.setUserId(queueMsg.getInt("userId"));
+				queueInfo.setRestId(queueMsg.getInt("restId"));
+				queueInfo.setSeqNo(queueMsg.getInt("seqNo"));
+				queueInfo.setSeqNow(queueMsg.getInt("seqNow"));
+				queueInfo.setSeatType(queueMsg.getInt("seatType"));
+				queueInfo.setPeopleBefore(queueMsg.getInt("peopleBefore"));
+				queueInfo.setPeopleNum(queueMsg.getInt("peopleNum"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return queueInfo;
 	}
 
 	public String test() {
@@ -221,6 +261,35 @@ public class ConnectServer {
 		}
 		return false;		
 	}
+
+	//http://localhost:8090/mealplanner/app/userBinding?userId=2&baiduUserId=924401985&channelId=4236885180925384783
+	public boolean bindBaiduUser(String userId, String baiduUserId, String channelId) {
+		PushMessageBindInfo bindInfo = null;
+		String url = path + "app/userBinding?"; 
+		Map<String, String> map = new HashMap<String, String>();
+
+		map.put("userId", userId);
+		map.put("baiduUserId", baiduUserId);
+		map.put("channelId", channelId);
+		String str = HttpUtils.postData(url, map);
+
+		//		{
+		//			"success": true,
+		//			"message": "Register userId=2 into baidu userId=924401985 and channel=4236885180925384783 success!",
+		//			"data": null
+		//			}
+		try {
+			JSONObject obj = new JSONObject(str);
+			if ((Boolean) obj.get("success")) {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return false;
+	}
+
 
 	public boolean sendOrder(int restId, String dateTime, String dishesIds, String peopleNum, int mealId, String phoneNum) {
 		int userId = SharedData.USERID;

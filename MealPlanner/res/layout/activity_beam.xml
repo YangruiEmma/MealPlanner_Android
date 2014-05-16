@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="#FFFFFF">
 
     <TextView
         android:id="@+id/promt"
@@ -15,9 +16,9 @@
         android:textSize="9pt" />
 
     <LinearLayout
-        android:id="@+id/lineLayout"
+        android:id="@+id/nfcLineLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="50dp" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,34 +47,43 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:id="@+id/nfcLineLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp" >
 
         <Button
-            android:id="@+id/btn_line"
+            android:id="@+id/nfcBtnHome"
             android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="15pt"
-            android:background="@drawable/line_btn"
-            android:text="@string/sureLine"
-            android:textColor="#FFFFFF"
-            android:textSize="6pt" />
-        <Button
-            android:id="@+id/nfcbtn_home"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="15pt"
-            android:background="@drawable/line_btn"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="#DC143C"
+            android:drawableLeft="@drawable/home_small_gray"
             android:text="@string/home"
-            android:textColor="#FFFFFF"
-            android:textSize="6pt" />
+            android:textColor="#FFFFFF" 
+            android:gravity="center"
+            style="?android:attr/borderlessButtonStyle" />
+
+        <Button
+            android:id="@+id/nfcBtnLine"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="#DC143C"
+            android:drawableLeft="@drawable/queue_small_gray"
+            android:text="@string/queue"
+            android:textColor="#FFFFFF" 
+            style="?android:attr/borderlessButtonStyle" />
+
     </LinearLayout>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/nfcview"
+        android:contentDescription="@string/view"
         android:src="@drawable/nfc_view" />
 
 </LinearLayout>

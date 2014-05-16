@@ -23,5 +23,5 @@ local.properties
 proguard/
 
 *.classpath
-project.properties
+*project.properties
 .settings/

@@ -13,14 +13,9 @@ import android.content.Intent;
 @SuppressLint("HandlerLeak")
 public class Welcome extends Activity {
 
-	//	private Button testBtn;//testBtn
-	//	private EditText testText;
-	//  private ConnectServer conn=  new ConnectServer();
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		StrictMode.setThreadPolicy(policy);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcome);
@@ -67,18 +62,18 @@ public class Welcome extends Activity {
 	};
 
 	public void toLogin() {		
-		Intent it=new Intent();//实例化Intent
-		it.setClass(Welcome.this, Login.class);//设置Class
+		Intent intent=new Intent();//实例化Intent
+		intent.setClass(Welcome.this, Login.class);//设置Class
 		//it.setClass(Welcome.this, MainActivity.class);//设置Class
-		startActivity(it);//启动Activity
+		startActivity(intent);//启动Activity
 		Welcome.this.finish();//结束Welcome Activity
 	}
-	
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.main, menu);
-//		return true;
-//	}
+
+	//	@Override
+	//	public boolean onCreateOptionsMenu(Menu menu) {
+	//		// Inflate the menu; this adds items to the action bar if it is present.
+	//		getMenuInflater().inflate(R.menu.main, menu);
+	//		return true;
+	//	}
 
 }

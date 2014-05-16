@@ -6,18 +6,16 @@
 
     <uses-sdk
         android:minSdkVersion="12"
-        android:targetSdkVersion="18" />
-
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.NFC" />
+        android:targetSdkVersion="19" />
 
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <!-- 访问网络的权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 访问精确位置的权限 -->
@@ -32,16 +30,25 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 读取电话状态的权限 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <!-- My Location -->
+    <!-- NFC -->
+    <uses-permission android:name="android.permission.NFC" />
+    <!-- 允许一个程序接收到 ACTION_BOOT_COMPLETED广播在系统完成启动 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- 允许程序读取或写入系统设置 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- 允许访问振动设备 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Http层进行文件的下载任务 -->
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <!-- 允许程序禁用键盘锁 -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <!-- 允许一个程序访问CellID或WiFi热点来获取粗略的位置 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!-- Mock test to simulate user movement -->
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <!-- Maps API needs OpenGL ES 2.0. -->
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" />
 
     <application
         android:name="bjtu.group4.mealplanner.activity.MealApplication"
@@ -60,12 +67,9 @@
 
         <activity
             android:name="bjtu.group4.mealplanner.activity.Welcome"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="bjtu.group4.mealplanner.activity.Login"
@@ -73,7 +77,14 @@
         </activity>
         <activity
             android:name="bjtu.group4.mealplanner.activity.MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="bjtu.group4.mealplanner.activity.RestInfoActivity"
@@ -87,7 +98,7 @@
             android:name="bjtu.group4.mealplanner.activity.OrderActivity"
             android:label="@string/title_activity_order" >
         </activity>
-         <activity
+        <activity
             android:name="bjtu.group4.mealplanner.activity.AllOrderList"
             android:label="@string/title_activity_orderList" >
         </activity>
@@ -103,7 +114,6 @@
             android:name="bjtu.group4.mealplanner.activity.MealDetailActivity"
             android:label="@string/title_activity_orderDetail" >
         </activity>
-        
         <activity
             android:name="bjtu.group4.mealplanner.activity.Beam"
             android:label="@string/title_activity_beam" >
@@ -122,6 +132,60 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
+
+        <!-- push应用定义消息receiver声明 -->
+        <receiver android:name="bjtu.group4.mealplanner.utils.PushMessageReceiver" >
+            <intent-filter>
+
+                <!-- 接收push消息 -->
+                <action android:name="com.baidu.android.pushservice.action.MESSAGE" />
+                <!-- 接收bind,unbind,fetch,delete等反馈消息 -->
+                <action android:name="com.baidu.android.pushservice.action.RECEIVE" />
+                <!-- 接受通知点击事件，和通知自定义内容 -->
+                <action android:name="com.baidu.android.pushservice.action.notification.CLICK" />
+            </intent-filter>
+        </receiver>
+
+        <!-- push必须的receviver和service声明 -->
+        <!-- 用于接收系统消息以保证 PushService 正常运行 -->
+        <receiver
+            android:name="com.baidu.android.pushservice.PushServiceReceiver"
+            android:process=":bdservice_v1" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.baidu.android.pushservice.action.notification.SHOW" />
+                <action android:name="com.baidu.android.pushservice.action.media.CLICK" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Push 服务接收客户端发送的各种请求 -->
+        <receiver
+            android:name="com.baidu.android.pushservice.RegistrationReceiver"
+            android:process=":bdservice_v1" >
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.METHOD" />
+                <action android:name="com.baidu.android.pushservice.action.BIND_SYNC" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Push 服务 -->
+        <service
+            android:name="com.baidu.android.pushservice.PushService"
+            android:exported="true"
+            android:process=":bdservice_v1" />
+        <!-- push结束 -->
+
+
+        <!-- 在百度开发者中心查询应用的API Key -->
+        <meta-data
+            android:name="api_key"
+            android:value="FshB9Rvr4LcUaWWowF9gnYqC" />
     </application>
 
 </manifest>
