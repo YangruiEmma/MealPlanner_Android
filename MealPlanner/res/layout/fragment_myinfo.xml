@@ -19,8 +19,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="false"
-                android:scaleType="centerCrop"
                 android:contentDescription="@string/imgContentBack"
+                android:scaleType="centerCrop"
                 android:src="@drawable/images" />
 
             <TextView
@@ -131,7 +131,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:clickable="true"
-            android:drawableLeft="@drawable/star"
+            android:drawableLeft="@drawable/time"
             android:drawableRight="@drawable/more"
             android:gravity="center"
             android:text="@string/title_activity_mealList" />

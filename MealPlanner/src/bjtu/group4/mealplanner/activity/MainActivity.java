@@ -93,6 +93,10 @@ public class MainActivity extends Activity implements OnClickListener {
 				Intent intent = new Intent(MainActivity.this, AllOrderList.class);
 				startActivity(intent);
 			}
+			if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("RestAll")) {
+				setTabSelection(1);
+			}
+
 			else 
 				setTabSelection(0);  
 		}
@@ -103,6 +107,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();  
+		
 	}
 	
 	@Override
@@ -117,6 +122,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			bindPushMesgInfo task = new bindPushMesgInfo();
 			task.execute(application.getUserId(),application.getBaiduUserId(),application.getPushMesgChannelId());
 		}
+		
 	}
 
 	@Override

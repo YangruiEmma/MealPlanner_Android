@@ -38,17 +38,24 @@ public class AllMealRequestList extends Activity implements OnItemClickListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_all_order);
 		super.onCreate(savedInstanceState);
-
-		bindViewAndSetData();
+		bindView();
 	}
 
-	private void bindViewAndSetData() {
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setData();
+	}
+
+	private void bindView() {
 		mData = new ArrayList<Map<String, Object>>();
 		mButton = (Button)findViewById(R.id.sure);
 		mButton.setVisibility(View.INVISIBLE);
 		mListView = (ListView)findViewById(R.id.OrderListView);
 		mListView.setOnItemClickListener(this);
-
+	}
+	
+	private void setData() {
 		GetMealRequestListTask task = new GetMealRequestListTask();
 		task.execute();
 
@@ -68,6 +75,7 @@ public class AllMealRequestList extends Activity implements OnItemClickListener 
 			int userId = SharedData.USERID;
 
 			mealList = new ConnectServer().getMealRequestsAll(userId);
+			mData.clear();
 			if(mealList.size() != 0) {
 				for(int i = 0; i < mealList.size(); ++i) {
 					Meal meal = mealList.get(i);
@@ -85,6 +93,7 @@ public class AllMealRequestList extends Activity implements OnItemClickListener 
 					map.put("title", meal.getRestName());
 					map.put("info", dateString);
 					map.put("more", statusString);
+					map.put("img", R.drawable.invitation);
 
 					mData.add(map);
 				}

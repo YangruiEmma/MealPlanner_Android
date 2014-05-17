@@ -64,16 +64,6 @@ public class InvitationDetailActivity extends Activity{
 
 	}
 
-	//	private String getFriendsString() {
-	//		String tempString = "";
-	//		List<MealFriend> list = mMeal.getMealFriendList();
-	//		for(int i = 0; i < list.size(); ++i) {
-	//			MealFriend mf = list.get(i);
-	//			tempString += mf.getmFriend().getFriendNameString() + "            "+ mf.getStatusString()+"\n";
-	//		}
-	//		return tempString;
-	//	}
-
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btnRefuse:
@@ -108,11 +98,7 @@ public class InvitationDetailActivity extends Activity{
 			int response = result.intValue();
 			switch(response){
 			case 1://成功
-				Toast.makeText(InvitationDetailActivity.this, "操作成功", Toast.LENGTH_SHORT).show();;
-
-				Intent intent = new Intent(InvitationDetailActivity.this, AllMealRequestList.class);
-				startActivity(intent);
-				InvitationDetailActivity.this.finish();
+				Toast.makeText(InvitationDetailActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
 				break;
 			case 0://失败
 				Toast.makeText(InvitationDetailActivity.this, "操作失败", Toast.LENGTH_LONG).show();

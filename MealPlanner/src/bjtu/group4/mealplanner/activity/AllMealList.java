@@ -38,16 +38,24 @@ public class AllMealList extends Activity implements OnItemClickListener{
 		setContentView(R.layout.activity_all_order);
 		super.onCreate(savedInstanceState);
 
-		bindViewAndSetData();
+		bindView();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setData();
 	}
 
-	private void bindViewAndSetData() {
+	private void bindView() {
 		mData = new ArrayList<Map<String, Object>>();
 		mButton = (Button)findViewById(R.id.sure);
 		mButton.setText("È¥×é·¹¾Ö");
 		mListView = (ListView)findViewById(R.id.OrderListView);
 		mListView.setOnItemClickListener(this);
-
+	}
+	
+	private void setData() {
 		GetMealListTask task = new GetMealListTask();
 		task.execute();
 
@@ -61,7 +69,11 @@ public class AllMealList extends Activity implements OnItemClickListener{
 	}
 
 	public void onClick(View v) {
-		
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		intent.putExtra("RestAll",true);
+		startActivity(intent);
+		AllMealList.this.finish();
 	}
 
 	private class GetMealListTask extends AsyncTask<Object, Integer, Integer> {
@@ -71,6 +83,7 @@ public class AllMealList extends Activity implements OnItemClickListener{
 			int userId = SharedData.USERID;
 
 			mealList = new ConnectServer().getMealsAll(userId);
+			mData.clear();
 			if(mealList.size() != 0) {
 				for(int i = 0; i < mealList.size(); ++i) {
 					Meal meal = mealList.get(i);
@@ -83,6 +96,7 @@ public class AllMealList extends Activity implements OnItemClickListener{
 					map.put("title", meal.getRestName());
 					map.put("info", dateString);
 					map.put("more", meal.getStatusString());
+					map.put("img", R.drawable.friends);
 
 					mData.add(map);
 				}
