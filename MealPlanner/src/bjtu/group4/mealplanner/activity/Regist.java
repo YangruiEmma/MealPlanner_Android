@@ -27,6 +27,7 @@ public class Regist extends Activity {
 	private EditText regis_pass;
 	private EditText regis_pass2;
 	private Button btnRegist; 
+	private Button btnReturn;
 	private ProgressDialog progress;
 
 	@Override
@@ -44,10 +45,12 @@ public class Regist extends Activity {
     	regis_pass = (EditText)this.findViewById(R.id.registpwd);
     	regis_pass2 = (EditText)this.findViewById(R.id.registpwdsure);
     	btnRegist = (Button)this.findViewById(R.id.btnRegist);
+    	btnReturn = (Button)this.findViewById(R.id.btnReturn);
 	}
 
 	public void setListeners(){
     	btnRegist.setOnClickListener(regist_action);
+    	btnReturn.setOnClickListener(return_action);
     }
 
 	/**
@@ -91,6 +94,20 @@ public class Regist extends Activity {
 		}
     };
     
+    /**
+     * 定义返回上一级监听器
+     */
+    private Button.OnClickListener return_action = new Button.OnClickListener(){
+
+		public void onClick(View v) {
+			//返回到登陆页面
+			Intent intent = new Intent();
+			intent.setClass(Regist.this, Login.class);
+			startActivity(intent);
+			Regist.this.finish();
+		}
+    	
+    };
     /**
    	 * 向服务器发送注册信息的异步任务类
    	 * */

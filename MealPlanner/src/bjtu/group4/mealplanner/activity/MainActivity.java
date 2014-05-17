@@ -63,8 +63,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				eatTime = false;
 				lineUpInfo = this.getIntent().getExtras().getString("lineUpInfo");
 				setTabSelection(2);
-			}else if (this.getIntent().getExtras() != null &&( this.getIntent().getExtras().getBoolean("FreeSeat")||
-					this.getIntent().getExtras().getBoolean("HasQueue"))) {
+			}else if (this.getIntent().getExtras() != null &&(this.getIntent().getExtras().getBoolean("FreeSeat")||
+					this.getIntent().getExtras().getBoolean("HasQueue") || this.getIntent().getExtras().getBoolean("QueueFail"))) {
 				eatTime = false;
 				setTabSelection(2);
 			}
@@ -90,13 +90,10 @@ public class MainActivity extends Activity implements OnClickListener {
 				Intent intent = new Intent(MainActivity.this, AllOrderList.class);
 				startActivity(intent);
 			}
-			//			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("bindInfo")) {
-			//				bindPushMesgInfo task = new bindPushMesgInfo();
-			//				task.execute(application.getUserId(),application.getBaiduUserId(),application.getPushMesgChannelId());
-			//			}
 			if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("RestAll")) {
 				setTabSelection(1);
 			}
+
 			else 
 				setTabSelection(0);  
 		}
@@ -108,6 +105,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onResume() {
 		super.onResume();  
 		
+	}
+	
+	@Override
+	public void onStart() {
+		super.onResume();  
 	}
 
 	@Override

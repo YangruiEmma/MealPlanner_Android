@@ -47,7 +47,7 @@ public class LineUpFragment extends Fragment  implements OnClickListener {
 		fatherActivity = (MainActivity)getActivity();
 		bingViews(lineUpView);
 		application = (MealApplication) getActivity().getApplication();
-		
+
 		if ("".equals(fatherActivity.getLineUpInfo())) {
 			getRestInfo();
 		}
@@ -180,25 +180,16 @@ public class LineUpFragment extends Fragment  implements OnClickListener {
 			switch(response){
 			case 1:
 				Toast.makeText(getActivity(), "获取排队信息成功，有排队", Toast.LENGTH_LONG).show();
-				//前面无人排队
-				if (queueInfo.getPeopleBefore()==0) {
-					String  lineUpInfo= "亲O(∩_∩)O，欢迎到"+queueInfo.getRestName()+"就餐，前面已无人排队您耐心等待，马上便可用餐！";
-					lineUpInfoShow(lineUpInfo);
-					AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
-					builder.setTitle("排队提示")
-					.setIcon(android.R.drawable.ic_dialog_info)
-					.setMessage(lineUpInfo).setPositiveButton("是", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							
-						}
-					}).show();
-				}else {
-					String lineUpInfo = "亲O(∩_∩)O，您有"+queueInfo.getPeopleNum()+"人到"+queueInfo.getRestName()+"餐厅就餐，为您提供了"+
-							queueInfo.getSeatType()+"人桌，前面还有"+queueInfo.getPeopleBefore()+"位排队"+
-							queueInfo.getSeatType()+"人桌,请耐心等待(*^__^*)";
-					lineUpInfoShow(lineUpInfo);
-				}
+				//				//前面无人排队
+				//				if (queueInfo.getPeopleBefore()==0) {
+				//					String  lineUpInfo= "亲O(∩_∩)O，欢迎到"+queueInfo.getRestName()+"就餐，前面已无人排队您耐心等待，马上便可用餐！";
+				//					lineUpInfoShow(lineUpInfo);
+				//				}else {
+				String lineUpInfo = "亲O(∩_∩)O，您有"+queueInfo.getPeopleNum()+"人到"+queueInfo.getRestName()+"餐厅就餐，为您提供了"+
+						queueInfo.getSeatType()+"人桌，前面还有"+queueInfo.getPeopleBefore()+"位排队"+
+						queueInfo.getSeatType()+"人桌,请耐心等待(*^__^*)";
+				lineUpInfoShow(lineUpInfo);
+				//				}
 				break;
 			case 2:
 				Toast.makeText(getActivity(), "获取排队信息成功，当前无排队", Toast.LENGTH_LONG).show();

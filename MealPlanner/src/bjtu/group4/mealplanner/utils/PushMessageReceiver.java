@@ -130,7 +130,6 @@ public class PushMessageReceiver  extends FrontiaPushMessageReceiver {
 		context.getApplicationContext().startActivity(intent);
 	}
 
-
 	private void sendPushInfotoServer(Context context) {
 		Intent intent = new Intent();
 		intent.setClass(context.getApplicationContext(), MainActivity.class);
