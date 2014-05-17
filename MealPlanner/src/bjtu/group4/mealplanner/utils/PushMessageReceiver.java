@@ -5,11 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import bjtu.group4.mealplanner.activity.Beam;
 import bjtu.group4.mealplanner.activity.MainActivity;
 import bjtu.group4.mealplanner.activity.MealApplication;
-import bjtu.group4.mealplanner.activity.Welcome;
-import bjtu.group4.mealplanner.model.PushMessageBindInfo;
 
 import com.baidu.frontia.api.FrontiaPushMessageReceiver;
 
@@ -49,10 +46,6 @@ public class PushMessageReceiver  extends FrontiaPushMessageReceiver {
 		application.setBaiduUserId(userId);
 		application.setPushMesgChannelId(channelId);
 		application.setBind(true);
-		//准备信息发往服务器
-		PushMessageBindInfo bindInfo = new PushMessageBindInfo();
-		bindInfo.setBaiduuserid(userId);
-		bindInfo.setChannelid(channelId);
 		sendPushInfotoServer(context);
 		Log.d("Meal", responseString);
 	}
@@ -113,12 +106,24 @@ public class PushMessageReceiver  extends FrontiaPushMessageReceiver {
 		Log.d("Meal", "updateContent");
 
 		Intent intent = new Intent();
-		intent.setClass(context.getApplicationContext(), MainActivity.class);
-		if ("Eating time coming".equals(title) || "Eating time".equals(title)) {
-			intent.putExtra("LineUp", true); 
-			intent.putExtra("queueInfo",info);
+		if ("用餐时间正在靠近".equals(title)) {
+			intent.putExtra("EatComing", true); 
+			intent.putExtra("lineUpInfo",info);
 		}
-		//TODO 其他提醒
+		else if ("用餐时刻".equals(title)) {
+			intent.putExtra("EatTime", true); 
+			intent.putExtra("lineUpInfo",info);
+		}
+		else if ("饭局邀请".equals(title)) {
+			intent.putExtra("Invitation", true); 
+		}
+		else if ("饭局邀请反馈".equals(title)) {
+			intent.putExtra("InvitFeedback", true);
+		}
+		else if ("订单已确认".equals(title)) {
+			intent.putExtra("OrderConfirmed", true);
+		}
+		intent.setClass(context.getApplicationContext(), MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		context.getApplicationContext().startActivity(intent);
 	}

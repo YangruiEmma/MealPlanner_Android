@@ -51,7 +51,7 @@ public class Beam extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_beam);
 		application = (MealApplication) getApplication();
-		
+
 		bindViews();
 		// 获取默认的NFC控制器  
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);  
@@ -272,7 +272,7 @@ public class Beam extends Activity {
 			String userID =  params[1].toString();
 			String peopleNum = (String)params[2];
 
-			queueInfo = new ConnectServer().sendQueueMesg(restID,userID,peopleNum);
+			queueInfo = new ConnectServer().sendLineUpRequest(restID,userID,peopleNum);
 
 			if(queueInfo!=null){
 				return new Integer(1);
@@ -290,9 +290,15 @@ public class Beam extends Activity {
 			switch(response){
 			case 1:
 				Toast.makeText(Beam.this, "您已经开始排队啦", Toast.LENGTH_LONG).show();
+				//您有5人就餐，为您提供了6人桌，前面还有3位排队6人桌，大约等待2小时
+				String lineUpInfo = "亲O(∩_∩)O，您有"+queueInfo.getPeopleNum()+"就餐，为您提供了"+
+						queueInfo.getSeatType()+"人桌，前面还有"+queueInfo.getPeopleBefore()+"位排队"+
+						queueInfo.getSeatType()+"人桌,请耐心等待(*^__^*)";
 				Intent intent = new Intent();
 				intent.setClass(Beam.this, MainActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				intent.putExtra("LineUp", true); 
+				intent.putExtra("lineUpInfo", lineUpInfo); 
 				startActivity(intent);
 				Beam.this.finish();
 				break;

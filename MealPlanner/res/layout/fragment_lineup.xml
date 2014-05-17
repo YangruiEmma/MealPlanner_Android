@@ -8,7 +8,9 @@
         android:id="@+id/imageView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
         android:contentDescription="@string/view"
+        android:scaleType="centerCrop"
         android:src="@drawable/lineupimage" />
 
     <ImageView
@@ -17,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:contentDescription="@string/view"
-        android:src="@drawable/sorry_big" />
+        android:background="@drawable/sorry_big"/>
 
     <TextView
         android:id="@+id/txt_lineupMesg"
@@ -27,28 +29,30 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="20dp"
-        android:text="@string/lineUpMsg2" 
-        android:textSize="8pt"/>
+        android:text="@string/lineUpMsg"
+        android:textSize="8pt" />
 
     <LinearLayout
         android:id="@+id/layout_mesgGetTime"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="1.0" >
+        android:layout_weight="1.0"
+        android:visibility="invisible" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:gravity="center"
-            android:text="@string/lineUpMesgTime" />
+            android:text="@string/lineUpMesgTime"/>
 
         <TextView
             android:id="@+id/txt_mesgGetTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/lineUpTime" />
+            android:text="@string/lineUpTime"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -67,9 +71,10 @@
             android:layout_weight="1"
             android:background="#DC143C"
             android:drawableLeft="@drawable/info"
+            android:enabled="false"
             android:gravity="center"
             android:text="@string/lineUpSee"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"/>
 
         <Button
             android:id="@+id/btn_lineUpCancel"
@@ -81,8 +86,10 @@
             android:layout_weight="1"
             android:background="#DC143C"
             android:drawableLeft="@drawable/lineup_cancel"
+            android:enabled="false"
             android:text="@string/lineUpCancel"
             android:textColor="#FFFFFF" />
+
     </LinearLayout>
 
 </LinearLayout>

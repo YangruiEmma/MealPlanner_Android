@@ -194,6 +194,11 @@
         <meta-data
             android:name="api_key"
             android:value="FshB9Rvr4LcUaWWowF9gnYqC" />
+
+        <activity
+            android:name="bjtu.group4.mealplanner.activity.Regist"
+            android:label="@string/title_activity_regist" >
+        </activity>
     </application>
 
 </manifest>

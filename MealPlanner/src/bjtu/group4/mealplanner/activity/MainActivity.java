@@ -28,6 +28,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnClickListener {
 
 	MealApplication application;
+	private String lineUpInfo = "";
+	private boolean eatTime = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,11 @@ public class MainActivity extends Activity implements OnClickListener {
 					PushConstants.LOGIN_TYPE_API_KEY, 
 					PushMesgUtils.getMetaValue(MainActivity.this, "api_key"));
 			Log.d("Meal", "after start work at " + Calendar.getInstance().getTimeInMillis());
+			
 			setContentView(R.layout.activity_main);
 			initViews();  
 			fragmentManager = getFragmentManager();  
-			setTabSelection(0);  
+			setTabSelection(0);
 		}
 		else {
 
@@ -60,7 +63,30 @@ public class MainActivity extends Activity implements OnClickListener {
 			initViews();  
 			fragmentManager = getFragmentManager();  
 			if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("LineUp")) {
+				eatTime = false;
+				lineUpInfo = this.getIntent().getExtras().getString("lineUpInfo");
 				setTabSelection(2);
+			}else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("EatComing")) {
+				eatTime = false;
+				lineUpInfo = this.getIntent().getExtras().getString("lineUpInfo");
+				setTabSelection(2);
+			}
+			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("EatTime")) {
+				eatTime = true;
+				lineUpInfo = this.getIntent().getExtras().getString("lineUpInfo");
+				setTabSelection(2);
+			}
+			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("Invitation")) {
+				Intent intent = new Intent(MainActivity.this, AllOrderList.class);
+				startActivity(intent);
+			}
+			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("InvitFeedback")) {
+				Intent intent = new Intent(MainActivity.this, PlanMealActivity.class);
+				startActivity(intent);
+			}
+			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("OrderConfirmed")) {
+				Intent intent = new Intent(MainActivity.this, PlanMealActivity.class);
+				startActivity(intent);
 			}
 			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("bindInfo")) {
 				setTabSelection(0);
@@ -97,10 +123,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	/** 
 	 * Tab上的 view
 	 */   
-	private View userInfoLayout;  
+	private View userInfoLayout;
 	private View planMealLayout;  
 	private View startPageLayout;  
-	private View lineUpLayout;  
+	private View lineUpLayout;
 
 	/** 
 	 * 在Tab布局上显示动态图标的控件 
@@ -239,6 +265,22 @@ public class MainActivity extends Activity implements OnClickListener {
 		}  
 	}
 	
+	public String getLineUpInfo() {
+		return lineUpInfo;
+	}
+
+	public void setLineUpInfo(String lineUpInfo) {
+		this.lineUpInfo = lineUpInfo;
+	}
+
+	public boolean isEatTime() {
+		return eatTime;
+	}
+
+	public void setEatTime(boolean eatTime) {
+		this.eatTime = eatTime;
+	}
+
 	@SuppressLint("UseValueOf")
 	private class bindPushMesgInfo extends AsyncTask<Object, Integer, Integer>{
 
