@@ -74,7 +74,8 @@
             android:layout_weight="1"
             android:background="#DC143C"
             android:text="@string/createOrder"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:onClick="onClick"  />
     </LinearLayout>
 
 </ScrollView>

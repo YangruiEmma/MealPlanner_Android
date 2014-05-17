@@ -14,78 +14,79 @@ import java.util.Map;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 
 
 public class HttpUtils {
-	
+
 	public static String postData(String path, Map<String, String> map) {
-	      
-	       InputStream inputStream = null;
-	       OutputStream outputStream = null;
-	       try {
-	    	   //建立连接
-	           URL url = new URL(path);
-	           HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-	           
-	           //设置连接属性
-	           //使用URL连接进行输出
-	           connection.setDoInput(true);
-	           //使用URL连接进行输入
-	           connection.setDoOutput(true);
-	           //忽略缓存
-	           connection.setUseCaches(false);
-	           //设置URL请求方法
-	           connection.setRequestMethod("POST");
-	           
-	           StringBuffer buffer = new StringBuffer();
-	           if (map != null && !map.isEmpty()) {
-	              for (Map.Entry<String, String> entry : map.entrySet()) {
-	                  buffer.append(entry.getKey())
-	                         .append("=")
-	                         .append(URLEncoder.encode(entry.getValue(), "utf-8"))
-	                         .append("&");
-	              }
-	              buffer.deleteCharAt(buffer.length() - 1);
-	           }
-	           
-	           byte[] data = buffer.toString().getBytes();
-	           connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-	           connection.setRequestProperty("Content-Length", String.valueOf(data.length));
-	           connection.setRequestProperty("Charset", "UTF-8");
-	           //建立输出流，并写入数据
-	           outputStream = connection.getOutputStream();
-	           outputStream.write(data);
-	           
-	           //获得响应状态
-	           if (connection.getResponseCode() == 200) {
-	              inputStream = connection.getInputStream();
-	              return getContext(inputStream, "utf-8");
-	           }
-	       } catch (MalformedURLException e) {
-	           e.printStackTrace();
-	       } catch (IOException e) {
-	           e.printStackTrace();
-	       }catch (Exception e) {
-	           e.printStackTrace();
-	       } finally {
-	           try {
-	              inputStream.close();
-	              outputStream.close();
-	           } catch (Exception e) {
-	        	   e.printStackTrace();
-	              return null;
-	           }
-	 
-	       }
-	       return null;
+		disableConnectionReuseIfNecessary();
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		try {
+			//建立连接
+			URL url = new URL(path);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+
+			//设置连接属性
+			//使用URL连接进行输出
+			connection.setDoInput(true);
+			//使用URL连接进行输入
+			connection.setDoOutput(true);
+			//忽略缓存
+			connection.setUseCaches(false);
+			//设置URL请求方法
+			connection.setRequestMethod("POST");
+
+			StringBuffer buffer = new StringBuffer();
+			if (map != null && !map.isEmpty()) {
+				for (Map.Entry<String, String> entry : map.entrySet()) {
+					buffer.append(entry.getKey())
+					.append("=")
+					.append(URLEncoder.encode(entry.getValue(), "utf-8"))
+					.append("&");
+				}
+				buffer.deleteCharAt(buffer.length() - 1);
+			}
+
+			byte[] data = buffer.toString().getBytes();
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Content-Length", String.valueOf(data.length));
+			connection.setRequestProperty("Charset", "UTF-8");
+			//建立输出流，并写入数据
+			outputStream = connection.getOutputStream();
+			outputStream.write(data);
+
+			//获得响应状态
+			if (connection.getResponseCode() == 200) {
+				inputStream = connection.getInputStream();
+				return getContext(inputStream, "utf-8");
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				inputStream.close();
+				outputStream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+
+		}
+		return null;
 	}
-	
+
 	public static String getContext(InputStream is, String encode){
-		
+
 		if(is != null){
 			StringBuilder sb = new StringBuilder();
 			String line;
-			
+
 			try{
 				BufferedReader reader = new BufferedReader(new InputStreamReader(is, encode));
 				while((line = reader.readLine())!= null){
@@ -105,16 +106,24 @@ public class HttpUtils {
 			return "";
 		}
 	}
-	
+
 	//是否联网网络
-    public static boolean IsHaveInternet(final Context context) {
-        try {
-            ConnectivityManager manger = (ConnectivityManager)
-                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo info = manger.getActiveNetworkInfo();
-            return (info!=null && info.isConnected());
-        } catch (Exception e) {
-            return false;
-        }
-    }
+	public static boolean IsHaveInternet(final Context context) {
+		try {
+			ConnectivityManager manger = (ConnectivityManager)
+					context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo info = manger.getActiveNetworkInfo();
+			return (info!=null && info.isConnected());
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private static void disableConnectionReuseIfNecessary() {
+		// Work around pre-Froyo bugs in HTTP connection reuse.
+		if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
+			System.setProperty("http.keepAlive", "false");
+
+		}}
+
 }

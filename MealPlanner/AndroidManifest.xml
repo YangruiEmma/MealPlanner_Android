@@ -123,6 +123,10 @@
             android:label="@string/title_activity_InvitationDetail" >
         </activity>
         <activity
+            android:name="bjtu.group4.mealplanner.activity.AllFriendsList"
+            android:label="@string/myfriends" >
+        </activity>
+        <activity
             android:name="bjtu.group4.mealplanner.activity.Beam"
             android:label="@string/title_activity_beam" >
             <intent-filter>

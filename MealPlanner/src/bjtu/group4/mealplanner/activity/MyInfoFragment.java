@@ -61,7 +61,8 @@ public class MyInfoFragment extends Fragment implements OnClickListener {
 		Intent intent;
 		switch(v.getId()) {
 		case R.id.myFriendTextView:
-			Log.d("MyInfoFragment","onClickmyFriendTextView");
+			intent = new Intent(getActivity(), AllFriendsList.class);
+			startActivity(intent);
 			break;
 		case R.id.myInvitationTextView:
 			intent = new Intent(getActivity(), AllMealRequestList.class);

@@ -9,6 +9,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.drive.events.ResourceEvent;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -31,6 +32,7 @@ import bjtu.group4.mealplanner.utils.ConnectServer;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -83,6 +85,9 @@ OnMyLocationButtonClickListener{
 					if(!mHMReference.containsKey(marker.getId()))
 						return false;    		
 					Restaurant rest = mHMReference.get(marker.getId());
+					
+					GetRestInfoAsyncTask task = new GetRestInfoAsyncTask();
+					task.execute(rest.getName());
 					return false;
 				}
 				
@@ -321,4 +326,36 @@ OnMyLocationButtonClickListener{
 			}
 		}
 	}
+	
+	private class GetRestInfoAsyncTask extends AsyncTask<String, Void, Restaurant>{
+		@Override
+		protected Restaurant doInBackground(String... arg0) {
+			String restName = arg0[0];
+			try {
+				Restaurant rest = new ConnectServer().getRestaurantDetail(restName);
+				
+				return rest;
+			} catch (Exception e) {
+				Log.d("GetRestInfoAsyncTask ",e.toString());
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Restaurant rest) {
+			super.onPostExecute(rest);
+			if(rest != null) {
+				Intent intent = new Intent(getActivity(), RestInfoActivity.class);
+				Bundle mBundle = new Bundle();  
+				mBundle.putSerializable("restInfo",rest);  
+				intent.putExtras(mBundle);  
+				startActivity(intent);
+			}
+			else {
+				Toast.makeText(getActivity(), "ªÒ»°≤ÕÃ¸œÍ«È ß∞‹ +_+ ",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
+	
 }

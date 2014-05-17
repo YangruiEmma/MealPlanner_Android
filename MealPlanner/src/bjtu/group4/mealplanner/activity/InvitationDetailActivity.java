@@ -108,7 +108,7 @@ public class InvitationDetailActivity extends Activity{
 			int response = result.intValue();
 			switch(response){
 			case 1://成功
-				Toast.makeText(InvitationDetailActivity.this, "成功拒绝邀请", Toast.LENGTH_SHORT).show();;
+				Toast.makeText(InvitationDetailActivity.this, "操作成功", Toast.LENGTH_SHORT).show();;
 
 				Intent intent = new Intent(InvitationDetailActivity.this, AllMealRequestList.class);
 				startActivity(intent);

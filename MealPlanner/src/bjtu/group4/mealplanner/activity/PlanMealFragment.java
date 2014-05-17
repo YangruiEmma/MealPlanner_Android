@@ -71,7 +71,7 @@ public class PlanMealFragment extends ListFragment {
 	public void AddDataToListView() {	
 		startIndex += 10;
 		GetRestListTask task = new GetRestListTask();
-		task.execute(startIndex + 1 , startIndex + 5);
+		task.execute(startIndex + 1 , startIndex + 10);
 	}
 
 	@Override  
@@ -79,11 +79,8 @@ public class PlanMealFragment extends ListFragment {
 		super.onListItemClick(l, v, position, id);  
 
 		Restaurant restaurant = restList.get(position);
-		Intent intent = new Intent(getActivity(), RestInfoActivity.class);
-		Bundle mBundle = new Bundle();  
-		mBundle.putSerializable("restInfo",restaurant);  
-		intent.putExtras(mBundle);  
-		startActivity(intent);
+		GetRestInfoTask task = new GetRestInfoTask();
+		task.execute(restaurant.getId());
 
 	}  
 
@@ -144,6 +141,34 @@ public class PlanMealFragment extends ListFragment {
 
 	}
 
+	private class GetRestInfoTask extends AsyncTask<Object, Integer, Restaurant> {
+		@Override
+		protected Restaurant doInBackground(Object... params) {
+			int restId = (Integer)params[0];
+			try {
+				Restaurant rest = new ConnectServer().getRestaurantDetailById(restId);
+				return rest;
+			} catch (Exception e) {
+				Log.d("PlanMealFragment GetRestInfoTask ",e.toString());
+			}
+			return null;
+		}
 
+		@Override
+		protected void onPostExecute(Restaurant rest) {
+			super.onPostExecute(rest);
+			if(rest != null) {
+				Intent intent = new Intent(getActivity(), RestInfoActivity.class);
+				Bundle mBundle = new Bundle();  
+				mBundle.putSerializable("restInfo",rest);  
+				intent.putExtras(mBundle);  
+				startActivity(intent);
+			}
+			else {
+				Toast.makeText(getActivity(), "ªÒ»°≤ÕÃ¸œÍ«È ß∞‹ +_+ ",
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
 
 }

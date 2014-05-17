@@ -1,11 +1,16 @@
 package bjtu.group4.mealplanner.activity;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import bjtu.group4.mealplanner.R;
+import bjtu.group4.mealplanner.model.Meal;
 import bjtu.group4.mealplanner.utils.ConnectServer;
 import bjtu.group4.mealplanner.utils.SharedData;
+import android.R.integer;
+import android.R.string;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -43,10 +48,12 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 		View orderLayout = inflater.inflate(R.layout.fragment_orderinfo,
 				container, false);
 		fatherActivity = (OrderActivity)getActivity();
+		timeString = "";
+		dateString = "";
 		bindView(orderLayout);
 		return orderLayout;
 	}
-	
+
 	private void bindView(View v) {
 		addrTextView = (TextView)v.findViewById(R.id.textViewAddr);
 		dishesTextView = (TextView)v.findViewById(R.id.textViewDishes);
@@ -59,14 +66,14 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 		pickDateBtn.setOnClickListener(this);
 		pickTimeBtn.setOnClickListener(this);
 		sureBtn.setOnClickListener(this);
-		
+
 		phoneEditText.setText(SharedData.PHONE);
+		setData();
 	}
-	
-	@Override
-	public void onStart() {
-		super.onStart();
-		String sAddr = fatherActivity.getRestaurant().getName() + "\n" +fatherActivity.getRestaurant().getPosition();
+
+	private void setData() {
+		String sAddr = fatherActivity.getRestaurant().getName() + "\n" 
+				+fatherActivity.getRestaurant().getPosition();
 		addrTextView.setText(sAddr);
 		String sDish = "";
 		for(int i = 0; i < fatherActivity.getDishNames().size(); ++i) {
@@ -74,6 +81,18 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 			sDish += "\n";
 		}	
 		dishesTextView.setText(sDish);
+		Meal meal = fatherActivity.getMeal();
+		if(meal != null) {
+			Date date = new Date(meal.getMealTime());
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			dateString = formatter.format(date);
+			pickDateBtn.setText(dateString);
+			formatter = new SimpleDateFormat("HH:mm");
+			timeString = formatter.format(date);
+			pickTimeBtn.setText(timeString);
+		}
+		
+		
 	}
 
 	@Override
@@ -97,26 +116,34 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 			else {
 				OrderTask task = new OrderTask();
 				String dishesIds = getDishIdString();
+				Integer mealId = -1;
+				if(fatherActivity.getMeal() != null) {
+					mealId = fatherActivity.getMeal().getMealId();
+				}
 				task.execute(fatherActivity.getRestaurant().getId(), dateString + " " +timeString + ":00", 
-						dishesIds, numEditText.getText().toString().trim(), phoneEditText.getText().toString().trim());
+						dishesIds, numEditText.getText().toString().trim(), 
+						phoneEditText.getText().toString().trim(),
+						mealId);
 			}
-			
+
 			break;  
 		default:  
 			break;  
 		}  
 	}
-	
+
 	private String getDishIdString() {
 		String tempString = "";
 		ArrayList<Integer> list = fatherActivity.getDishIds();
+		if(list.size() == 0) return "";
+		
 		for(int i = 0; i < list.size(); ++i) {
 			tempString += list.get(i) + ",";
 		}
 		int lenth = tempString.length();
 		return tempString.substring(0, lenth-1);
 	}
-	
+
 	private class OrderTask extends AsyncTask<Object, Integer, Integer>{
 
 		@Override
@@ -126,39 +153,40 @@ public class OrderInfoFragment extends Fragment implements OnClickListener {
 			String dishesIds = (String)params[2];
 			String peopleNum = (String)params[3];
 			String phoneNum = (String)params[4];
-			Boolean result = new ConnectServer().sendOrder(restId, dateTime, dishesIds, peopleNum, -1, phoneNum);
-			
+			Integer mealId = (Integer)params[5];
+			Boolean result = new ConnectServer().sendOrder(restId, dateTime, dishesIds, peopleNum, mealId, phoneNum);
+
 			if(result){
 				return 1;
 			}else{
 				return 0;			
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(Integer result) {
-			
+
 			int response = result.intValue();
 			switch(response){
-				//成功
-				case 1:
-					//显示成功的信息
-					Toast.makeText(getActivity(), "创建订单成功", Toast.LENGTH_LONG).show();
-					
-					Intent intent = new Intent();
-					intent.setClass(getActivity(), MainActivity.class);
-					startActivity(intent);
-					getActivity().finish();
-					
-					break;
+			//成功
+			case 1:
+				//显示成功的信息
+				Toast.makeText(getActivity(), "创建订单成功", Toast.LENGTH_LONG).show();
+
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), MainActivity.class);
+				startActivity(intent);
+				getActivity().finish();
+
+				break;
 				//失败
-				case 0:
-					Toast.makeText(getActivity(), "创建订单失败", Toast.LENGTH_LONG).show();
-					break;
+			case 0:
+				Toast.makeText(getActivity(), "创建订单失败", Toast.LENGTH_LONG).show();
+				break;
 			}
 		}
-    }
-	
+	}
+
 	public static class OrderTimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {  
 		@Override  
 		public Dialog onCreateDialog(Bundle savedInstanceState) {  
