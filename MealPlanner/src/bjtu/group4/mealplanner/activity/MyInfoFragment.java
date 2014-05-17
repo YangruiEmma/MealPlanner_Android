@@ -28,6 +28,7 @@ public class MyInfoFragment extends Fragment implements OnClickListener {
 	private TextView myFriendTextView;
 	private TextView myInvitationTextView;
 	private TextView myOrderTextView;
+	private TextView myMealsTextView;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -44,6 +45,9 @@ public class MyInfoFragment extends Fragment implements OnClickListener {
 		myInvitationTextView.setOnClickListener(this);
 		myOrderTextView = (TextView)v.findViewById(R.id.myOrderTextView);
 		myOrderTextView.setOnClickListener(this);
+		myMealsTextView = (TextView)v.findViewById(R.id.MyMealsTextView);
+		myMealsTextView.setOnClickListener(this);
+		
 		myNameTextView = (TextView)v.findViewById(R.id.userName);
 		myEmailTextView = (TextView)v.findViewById(R.id.email);
 		myPhoneTextView = (TextView)v.findViewById(R.id.phoneNum);
@@ -54,15 +58,21 @@ public class MyInfoFragment extends Fragment implements OnClickListener {
 	
 	@Override
 	public void onClick(View v) {
+		Intent intent;
 		switch(v.getId()) {
 		case R.id.myFriendTextView:
 			Log.d("MyInfoFragment","onClickmyFriendTextView");
 			break;
 		case R.id.myInvitationTextView:
-			Log.d("MyInfoFragment","onClickmyInvitationTextView");
+			intent = new Intent(getActivity(), AllMealRequestList.class);
+			startActivity(intent);
 			break;
 		case R.id.myOrderTextView:
-			Intent intent = new Intent(getActivity(), AllOrderList.class);
+			intent = new Intent(getActivity(), AllOrderList.class);
+			startActivity(intent);
+			break;
+		case R.id.MyMealsTextView:
+			intent = new Intent(getActivity(), AllMealList.class);
 			startActivity(intent);
 			break;
 		default:

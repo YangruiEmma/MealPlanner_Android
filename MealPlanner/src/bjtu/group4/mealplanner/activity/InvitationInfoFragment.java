@@ -48,7 +48,7 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 		friendsTextView = (TextView)v.findViewById(R.id.textViewFriends);
 		pickDateBtn = (Button)v.findViewById(R.id.btnChooseDate);
 		pickTimeBtn = (Button)v.findViewById(R.id.btnChooseTime);
-		sureBtn = (Button)v.findViewById(R.id.btnSure);
+		sureBtn = (Button)v.findViewById(R.id.btnGoOrder);
 
 		pickDateBtn.setOnClickListener(this);
 		pickTimeBtn.setOnClickListener(this);
@@ -80,7 +80,7 @@ public class InvitationInfoFragment extends Fragment implements OnClickListener 
 			TimePickerFragment tf = new TimePickerFragment(); 
 			tf.show(getFragmentManager(), "TimePicker"); 
 			break;  
-		case R.id.btnSure:  	
+		case R.id.btnGoOrder:  	
 			if(dateString == "" ) {
 				Toast.makeText(getActivity(), "«Î—°‘Ò»’∆⁄", Toast.LENGTH_LONG).show();
 			}

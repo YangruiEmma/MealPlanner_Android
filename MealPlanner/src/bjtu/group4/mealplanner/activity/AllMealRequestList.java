@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import bjtu.group4.mealplanner.R;
-import bjtu.group4.mealplanner.model.Order;
+import bjtu.group4.mealplanner.model.Meal;
+import bjtu.group4.mealplanner.model.MealFriend;
 import bjtu.group4.mealplanner.utils.ConnectServer;
 import bjtu.group4.mealplanner.utils.CustomAdapter;
 import bjtu.group4.mealplanner.utils.SharedData;
@@ -21,65 +22,69 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class AllOrderList extends Activity implements OnItemClickListener{
+public class AllMealRequestList extends Activity implements OnItemClickListener {
 	private CustomAdapter lAdapter;
 	private ListView mListView;
 	private List<Map<String, Object>> mData;
 	private ProgressDialog progress;
-	private List<Order> orderList;
-	
+	private List<Meal> mealList;
+	private Button mButton;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_all_order);
 		super.onCreate(savedInstanceState);
-		
+
 		bindViewAndSetData();
 	}
-	
+
 	private void bindViewAndSetData() {
 		mData = new ArrayList<Map<String, Object>>();
+		mButton = (Button)findViewById(R.id.sure);
+		mButton.setVisibility(View.INVISIBLE);
 		mListView = (ListView)findViewById(R.id.OrderListView);
 		mListView.setOnItemClickListener(this);
-		
-		GetOrderListTask task = new GetOrderListTask();
+
+		GetMealRequestListTask task = new GetMealRequestListTask();
 		task.execute();
-		
+
 		progress = new ProgressDialog(this);
 		progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progress.setTitle("请稍等");
-		progress.setMessage("努力加载中。。。");
+		progress.setMessage("努力加载中...");
 		progress.setIndeterminate(false);
 		progress.setCancelable(true);
 		progress.show();
 	}
 	
-	public void onClick(View v) {
-		
-	}
-	
-	private class GetOrderListTask extends AsyncTask<Object, Integer, Integer> {
+	private class GetMealRequestListTask extends AsyncTask<Object, Integer, Integer> {
 
 		@Override
 		protected Integer doInBackground(Object... params) {
 			int userId = SharedData.USERID;
 
-			orderList = new ConnectServer().getOrdersAll(userId);
-			if(orderList.size() != 0) {
-				for(int i = 0; i < orderList.size(); ++i) {
-					Order order = orderList.get(i);
-					Date date = new Date(order.getMealTime());
+			mealList = new ConnectServer().getMealRequestsAll(userId);
+			if(mealList.size() != 0) {
+				for(int i = 0; i < mealList.size(); ++i) {
+					Meal meal = mealList.get(i);
+					Date date = new Date(meal.getMealTime());
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String dateString = formatter.format(date);
+					String statusString = "";
+					if(meal.getMealFriendList().size() > 0) {
+						MealFriend mf = meal.getMealFriendList().get(0);
+						statusString = mf.getStatusString();
+					}
 
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("id", order.getOrderId());
-					map.put("title", order.getRestName());
+					map.put("id", meal.getMealId());
+					map.put("title", meal.getRestName());
 					map.put("info", dateString);
-					map.put("more", order.getStatusString());
+					map.put("more", statusString);
 
 					mData.add(map);
 				}
@@ -100,7 +105,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 				if(mData.size() > 0)
 				{
 					if(lAdapter == null) {
-						lAdapter = new CustomAdapter(mData, AllOrderList.this);
+						lAdapter = new CustomAdapter(mData, AllMealRequestList.this);
 						mListView.setAdapter(lAdapter);
 					}
 					else {
@@ -111,7 +116,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 				break;
 				//失败
 			case 0:
-				Toast.makeText(AllOrderList.this, "目前没有订单耶~去下订单吧", Toast.LENGTH_LONG).show();
+				Toast.makeText(AllMealRequestList.this, "您还没有被邀请过~", Toast.LENGTH_LONG).show();
 				break;
 			}
 			super.onPostExecute(result);
@@ -124,11 +129,11 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
 		// TODO Auto-generated method stub
 		Log.d("AllOrderList", "onItemClick");
-		if(position > orderList.size()) return;
-		Order order = orderList.get(position);
-		Intent intent = new Intent(this, OrderDetailActivity.class);
+		if(position > mealList.size()) return;
+		Meal meal = mealList.get(position);
+		Intent intent = new Intent(this, InvitationDetailActivity.class);
 		Bundle mBundle = new Bundle();  
-		mBundle.putSerializable("order",order);  
+		mBundle.putSerializable("invitation",meal);  
 		intent.putExtras(mBundle);  
 		startActivity(intent);
 	}

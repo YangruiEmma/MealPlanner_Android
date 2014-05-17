@@ -100,7 +100,7 @@
             android:layout_height="50dp" >
 
             <TextView
-                android:id="@+id/TextView01"
+                android:id="@+id/MyMealTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
@@ -125,7 +125,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnSure"
+            android:id="@+id/btnGoOrder"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"

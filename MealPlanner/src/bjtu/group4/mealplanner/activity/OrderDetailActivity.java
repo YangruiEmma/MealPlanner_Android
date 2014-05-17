@@ -34,7 +34,7 @@ public class OrderDetailActivity extends Activity {
 	private void bindViewAndSetData() {
 		dateTextView = (TextView)findViewById(R.id.textDate);
 		restInfoTextView = (TextView)findViewById(R.id.textViewAddr);
-		phonetTextView = (TextView)findViewById(R.id.textPhone);
+		phonetTextView = (TextView)findViewById(R.id.textOrganizer);
 		numTextView = (TextView)findViewById(R.id.textNum);
 		orderIdTextView = (TextView)findViewById(R.id.textOrderId);
 		dishesTextView = (TextView)findViewById(R.id.textViewDishes);
@@ -49,6 +49,9 @@ public class OrderDetailActivity extends Activity {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		dateTextView.setText(formatter.format(date));
 		
+		if(mOrder.getOrderState() == Order.SUCCESSE) {
+			
+		}
 		
 	}
 	
