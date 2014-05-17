@@ -79,15 +79,18 @@ public class MainActivity extends Activity implements OnClickListener {
 				setTabSelection(2);
 			}
 			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("Invitation")) {
-				Intent intent = new Intent(MainActivity.this, AllOrderList.class);
+				setTabSelection(0);
+				Intent intent = new Intent(MainActivity.this, AllMealRequestList.class);
 				startActivity(intent);
 			}
 			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("InvitFeedback")) {
-				Intent intent = new Intent(MainActivity.this, PlanMealActivity.class);
+				setTabSelection(0);
+				Intent intent = new Intent(MainActivity.this, AllMealList.class);
 				startActivity(intent);
 			}
 			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("OrderConfirmed")) {
-				Intent intent = new Intent(MainActivity.this, PlanMealActivity.class);
+				setTabSelection(0);
+				Intent intent = new Intent(MainActivity.this, AllOrderList.class);
 				startActivity(intent);
 			}
 			else 
