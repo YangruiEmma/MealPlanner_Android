@@ -74,13 +74,13 @@ public class Meal implements Serializable {
 		String s = "";
 		switch (mealState) {
 		case ONGOING:
-			s = "还有人没同意呐";
+			s = "进行中";
 			break;
 		case EXPIRE:
 			s = "有人拒绝了你";
 			break;
 		case SUCCESS:
-			s = "大家都同意啦";
+			s = "大家都接受了邀请";
 			break;
 		default:
 			break;

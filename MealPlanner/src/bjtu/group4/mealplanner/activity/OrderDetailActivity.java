@@ -7,12 +7,16 @@ import java.util.List;
 
 import bjtu.group4.mealplanner.R;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Order;
+import bjtu.group4.mealplanner.utils.ConnectServer;
 
 public class OrderDetailActivity extends Activity {
 
@@ -67,4 +71,41 @@ public class OrderDetailActivity extends Activity {
 		}
 		return tempString;
 	}
+	
+	public void onClick(View v) {
+		CancleOrderTask task = new CancleOrderTask();
+		task.execute(mOrder.getOrderId());
+	}
+	
+	private class CancleOrderTask extends AsyncTask<Object, Integer, Integer>{
+
+		@Override
+		protected Integer doInBackground(Object... params) {
+			Integer orderId = (Integer)params[0];
+			Boolean result = new ConnectServer().sendCancleOrder(orderId);
+			if(result){
+				return 1;
+			}else{
+				return 0;			
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			int response = result.intValue();
+			switch(response){
+			case 1://成功
+				Toast.makeText(OrderDetailActivity.this, "取消订单成功", Toast.LENGTH_SHORT).show();;
+
+				Intent intent = new Intent(OrderDetailActivity.this, AllOrderList.class);
+				startActivity(intent);
+				OrderDetailActivity.this.finish();
+				break;
+			case 0://失败
+				Toast.makeText(OrderDetailActivity.this, "取消订单失败", Toast.LENGTH_LONG).show();
+				break;
+			}
+		}
+	}
+	
 }

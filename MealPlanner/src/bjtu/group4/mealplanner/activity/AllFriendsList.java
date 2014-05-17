@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import bjtu.group4.mealplanner.R;
-import bjtu.group4.mealplanner.model.Order;
+import bjtu.group4.mealplanner.model.Friend;
+import bjtu.group4.mealplanner.model.Meal;
 import bjtu.group4.mealplanner.utils.ConnectServer;
 import bjtu.group4.mealplanner.utils.CustomAdapter;
 import bjtu.group4.mealplanner.utils.SharedData;
@@ -20,68 +21,65 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class AllOrderList extends Activity implements OnItemClickListener{
+public class AllFriendsList extends Activity implements OnItemClickListener{
 	private CustomAdapter lAdapter;
 	private ListView mListView;
 	private List<Map<String, Object>> mData;
 	private ProgressDialog progress;
-	private List<Order> orderList;
-	
+	private List<Friend> friendList;
+	private Button mButton;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_all_order);
 		super.onCreate(savedInstanceState);
-		
+
 		bindViewAndSetData();
 	}
-	
+
 	private void bindViewAndSetData() {
 		mData = new ArrayList<Map<String, Object>>();
+		mButton = (Button)findViewById(R.id.sure);
+		mButton.setVisibility(View.INVISIBLE);
 		mListView = (ListView)findViewById(R.id.OrderListView);
 		mListView.setOnItemClickListener(this);
-		
-		GetOrderListTask task = new GetOrderListTask();
+
+		GetFriendListTask task = new GetFriendListTask();
 		task.execute();
-		
+
 		progress = new ProgressDialog(this);
 		progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progress.setTitle("请稍等");
-		progress.setMessage("努力加载中....");
+		progress.setMessage("努力加载中...");
 		progress.setIndeterminate(false);
 		progress.setCancelable(true);
 		progress.show();
 	}
-	
+
 	public void onClick(View v) {
-//		Intent intent = new Intent(this, MainActivity.class);
-//		intent.putExtra("RestAll",1);
-//		startActivity(intent);
+		
 	}
-	
-	private class GetOrderListTask extends AsyncTask<Object, Integer, Integer> {
+
+	private class GetFriendListTask extends AsyncTask<Object, Integer, Integer> {
 
 		@Override
 		protected Integer doInBackground(Object... params) {
 			int userId = SharedData.USERID;
 
-			orderList = new ConnectServer().getOrdersAll(userId);
-			if(orderList.size() != 0) {
-				for(int i = 0; i < orderList.size(); ++i) {
-					Order order = orderList.get(i);
-					Date date = new Date(order.getMealTime());
-					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					String dateString = formatter.format(date);
-
+			friendList = new ConnectServer().getFriendsAll(userId);
+			if(friendList.size() != 0) {
+				for(int i = 0; i < friendList.size(); ++i) {
+					Friend friend = friendList.get(i);
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("id", order.getOrderId());
-					map.put("title", order.getRestName());
-					map.put("info", dateString);
-					map.put("more", order.getStatusString());
+					map.put("id", friend.getFriendId());
+					map.put("title", friend.getFriendNameString());
+					map.put("info", friend.getFriendPhone());
+					map.put("more", "");
 
 					mData.add(map);
 				}
@@ -102,7 +100,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 				if(mData.size() > 0)
 				{
 					if(lAdapter == null) {
-						lAdapter = new CustomAdapter(mData, AllOrderList.this);
+						lAdapter = new CustomAdapter(mData, AllFriendsList.this);
 						mListView.setAdapter(lAdapter);
 					}
 					else {
@@ -113,25 +111,23 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 				break;
 				//失败
 			case 0:
-				Toast.makeText(AllOrderList.this, "目前没有订单耶~去下订单吧", Toast.LENGTH_LONG).show();
+				Toast.makeText(AllFriendsList.this, "目前没有好友耶~快去添加好友吧", Toast.LENGTH_LONG).show();
 				break;
 			}
 			super.onPostExecute(result);
 		}
-
-
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
 		// TODO Auto-generated method stub
-		Log.d("AllOrderList", "onItemClick");
-		if(position > orderList.size()) return;
-		Order order = orderList.get(position);
-		Intent intent = new Intent(this, OrderDetailActivity.class);
-		Bundle mBundle = new Bundle();  
-		mBundle.putSerializable("order",order);  
-		intent.putExtras(mBundle);  
-		startActivity(intent);
+//		Log.d("AllOrderList", "onItemClick");
+//		if(position > friendList.size()) return;
+//		Friend meal = friendList.get(position);
+//		Intent intent = new Intent(this, MealDetailActivity.class);
+//		Bundle mBundle = new Bundle();  
+//		mBundle.putSerializable("meal",meal);  
+//		intent.putExtras(mBundle);  
+//		startActivity(intent);
 	}
 }

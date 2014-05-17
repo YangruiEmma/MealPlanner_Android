@@ -126,6 +126,7 @@
             android:layout_marginTop="20dp"
             android:background="#DC143C"
             android:text="@string/cancleOrder"
+            android:onClick="onClick"
             android:textColor="#FFFFFF" />
 
     </LinearLayout>
