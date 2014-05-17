@@ -118,7 +118,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnGoOrder"
+            android:id="@+id/btnCancle"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"

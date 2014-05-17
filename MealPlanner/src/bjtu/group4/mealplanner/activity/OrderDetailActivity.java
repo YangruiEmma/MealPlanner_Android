@@ -8,6 +8,8 @@ import java.util.List;
 import bjtu.group4.mealplanner.R;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Order;
@@ -20,6 +22,7 @@ public class OrderDetailActivity extends Activity {
 	private TextView numTextView;
 	private TextView orderIdTextView;
 	private TextView dishesTextView;
+	private Button CancelButton;
 	
 	private Order mOrder;
 	
@@ -38,6 +41,7 @@ public class OrderDetailActivity extends Activity {
 		numTextView = (TextView)findViewById(R.id.textNum);
 		orderIdTextView = (TextView)findViewById(R.id.textOrderId);
 		dishesTextView = (TextView)findViewById(R.id.textViewDishes);
+		CancelButton = (Button)findViewById(R.id.btnCancle);
 		
 		orderIdTextView.setText("¶©µ¥ID£º" + mOrder.getOrderId() + "");
 		numTextView.setText(mOrder.getPeopleNum() +"");
@@ -49,8 +53,8 @@ public class OrderDetailActivity extends Activity {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		dateTextView.setText(formatter.format(date));
 		
-		if(mOrder.getOrderState() == Order.SUCCESSE) {
-			
+		if(mOrder.getOrderState() != Order.SUCCESSE) {
+			CancelButton.setVisibility(View.INVISIBLE);
 		}
 		
 	}
