@@ -4,7 +4,6 @@ import bjtu.group4.mealplanner.R;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.StrictMode;
 import android.widget.ImageView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,17 +21,6 @@ public class Welcome extends Activity {
 		ImageView iv = (ImageView)this.findViewById(R.id.wpic);
 		iv.setImageResource(R.drawable.welcome);
 		welcome();
-
-		//		testBtn = (Button) findViewById(R.id.testBtn);
-		//		testText = (EditText) findViewById(R.id.testText);
-		//
-		//		testBtn.setOnClickListener(new OnClickListener() {
-		//
-		//			public void onClick(View v) {
-		//				String str = conn.test();
-		//				testText.setText(str.substring(0, 20));
-		//			}
-		//		});
 	}
 
 	/**
@@ -64,16 +52,8 @@ public class Welcome extends Activity {
 	public void toLogin() {		
 		Intent intent=new Intent();//实例化Intent
 		intent.setClass(Welcome.this, Login.class);//设置Class
-		//it.setClass(Welcome.this, MainActivity.class);//设置Class
 		startActivity(intent);//启动Activity
 		Welcome.this.finish();//结束Welcome Activity
 	}
-
-	//	@Override
-	//	public boolean onCreateOptionsMenu(Menu menu) {
-	//		// Inflate the menu; this adds items to the action bar if it is present.
-	//		getMenuInflater().inflate(R.menu.main, menu);
-	//		return true;
-	//	}
 
 }
