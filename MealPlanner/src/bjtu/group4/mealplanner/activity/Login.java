@@ -106,10 +106,10 @@ public class Login extends Activity {
 	private Button.OnClickListener regist_action = new Button.OnClickListener(){
 
 		public void onClick(View v) {
-			//			Intent intent = new Intent();
-			//			intent.setClass(Login.this, Regist.class);
-			//			startActivity(intent);
-			//			Login.this.finish();
+			Intent intent = new Intent();
+			intent.setClass(Login.this, Regist.class);
+			startActivity(intent);
+			Login.this.finish();
 		}
 	};
 
@@ -130,7 +130,7 @@ public class Login extends Activity {
 			User user = new ConnectServer().userLogin(name, pwd);
 
 			if(user!=null){
-				
+
 				if (user.isloginCorrect()) {
 					//µÇÂ½³É¹¦
 					SharedPreferences shared = getSharedPreferences("user_info", MODE_PRIVATE);
@@ -142,9 +142,7 @@ public class Login extends Activity {
 					editor.putBoolean("auto", false);
 					editor.putInt("userId", user.getId());
 					editor.putString("username", user.getUsername());
-					editor.putString("nickname", user.getNickname());
 					editor.putString("password", user.getPassword());
-					editor.putString("gender", user.getGender());
 					editor.putString("email", user.getEmail());
 					editor.commit();
 

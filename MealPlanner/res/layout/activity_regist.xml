@@ -46,10 +46,11 @@
         android:orientation="horizontal" >
 
         <EditText
-            android:id="@+id/registNick"
+            android:id="@+id/registPhone"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/nickhint" />
+            android:hint="@string/phonehint"
+            android:inputType="number" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +62,7 @@
         android:orientation="horizontal" >
 
         <EditText
-            android:id="@+id/txt_email"
+            android:id="@+id/registemail"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/emailhint"/>

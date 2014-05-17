@@ -50,6 +50,10 @@ public class PlanMealFragment extends ListFragment {
 		return messageLayout;
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+	}
 	private void bindViewAndGetData() {
 		mData = new ArrayList<Map<String, Object>>();
 		GetRestListTask task = new GetRestListTask();

@@ -8,27 +8,20 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.android.gms.internal.is;
-import android.R.integer;
 import android.util.Log;
 import bjtu.group4.mealplanner.model.Food;
 import bjtu.group4.mealplanner.model.Friend;
 import bjtu.group4.mealplanner.model.Meal;
 import bjtu.group4.mealplanner.model.MealFriend;
 import bjtu.group4.mealplanner.model.Order;
-import bjtu.group4.mealplanner.model.PushMessageBindInfo;
 import bjtu.group4.mealplanner.model.QueueInfo;
 import bjtu.group4.mealplanner.model.Restaurant;
 import bjtu.group4.mealplanner.model.User;
 
 public class ConnectServer {
 
-	//	public static String path = "http://172.28.34.69:8090/mealplanner/";
-	public static String path = "http://59.64.4.63:8090/mealplanner/";//http://localhost:8080/mealplanner/userinfo?userId=1
-	//public static String path = "http://172.28.34.136:8090/mealplanner/";
-
-	//public static String path = "http://192.16.137.1:8090/mealplanner/";
-	//public static String path = "http://172.28.12.93:8090/mealplanner/";
+	//public static String path = "http://172.28.34.69:8080/mealplanner/";
+	public static String path = "http://59.64.4.63:8080/mealplanner/";
 
 	/**
 	 * 用户登录
@@ -172,20 +165,34 @@ public class ConnectServer {
 		try {
 			JSONObject obj = new JSONObject(str);
 			if ((Boolean) obj.get("success")) {
-				JSONObject queueMsg = (JSONObject) obj
-						.getJSONObject("data");
-
 				queueInfo = new QueueInfo();
-				queueInfo.setUserId(queueMsg.getInt("userId"));
-				queueInfo.setRestId(queueMsg.getInt("restId"));
-				queueInfo.setSeqNo(queueMsg.getInt("seqNo"));
-				queueInfo.setSeqNow(queueMsg.getInt("seqNow"));
-				queueInfo.setSeatType(queueMsg.getInt("seatType"));
-				queueInfo.setPeopleBefore(queueMsg.getInt("peopleBefore"));
-				queueInfo.setPeopleNum(queueMsg.getInt("peopleNum"));
+				//有空闲桌子
+				if ("free".equalsIgnoreCase((String) obj.get("message"))){
+					queueInfo.setHasFreeSeat(true);
+				}
+				//有空桌且有排队状态则排队
+				else if ("hasLineup".equalsIgnoreCase((String) obj.get("message"))){
+					queueInfo.setHasQueue(true);
+					
+				}
+				//无空桌子且当前无排队状态则进行排队
+				else {
+					JSONObject queueMsg = (JSONObject) obj
+							.getJSONObject("data");
+
+					queueInfo.setUserId(queueMsg.getInt("userId"));
+					queueInfo.setRestId(queueMsg.getInt("restId"));
+					queueInfo.setSeqNo(queueMsg.getInt("seqNo"));
+					queueInfo.setSeqNow(queueMsg.getInt("seqNow"));
+					queueInfo.setSeatType(queueMsg.getInt("seatType"));
+					queueInfo.setPeopleBefore(queueMsg.getInt("peopleBefore"));
+					queueInfo.setPeopleNum(queueMsg.getInt("peopleNum"));
+					queueInfo.setHasFreeSeat(false);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 		return queueInfo;
 	}
@@ -410,21 +417,31 @@ public class ConnectServer {
 		try {
 			JSONObject obj = new JSONObject(str);
 			if ((Boolean) obj.get("success")) {
-				JSONObject queueMsg = (JSONObject) obj
-						.getJSONObject("data");
-
-				//TODO 返回无排队的情况
 				queueInfo = new QueueInfo();
-				queueInfo.setUserId(queueMsg.getInt("userId"));
-				queueInfo.setRestId(queueMsg.getInt("restId"));
-				queueInfo.setSeqNo(queueMsg.getInt("seqNo"));
-				queueInfo.setSeqNow(queueMsg.getInt("seqNow"));
-				queueInfo.setSeatType(queueMsg.getInt("seatType"));
-				queueInfo.setPeopleBefore(queueMsg.getInt("peopleBefore"));
-				queueInfo.setPeopleNum(queueMsg.getInt("peopleNum"));
+				//返回有排队的情况 data有值
+				String hasQueue = (String) obj.get("message");
+				if (!"no".equals(hasQueue)) {
+					JSONObject queueMsg = (JSONObject) obj
+							.getJSONObject("data");
+
+					queueInfo.setHasQueue(true);
+					queueInfo.setUserId(queueMsg.getInt("userId"));
+					queueInfo.setRestId(queueMsg.getInt("restId"));
+					queueInfo.setSeqNo(queueMsg.getInt("seqNo"));
+					queueInfo.setSeqNow(queueMsg.getInt("seqNow"));
+					queueInfo.setSeatType(queueMsg.getInt("seatType"));
+					queueInfo.setPeopleBefore(queueMsg.getInt("peopleBefore"));
+					queueInfo.setPeopleNum(queueMsg.getInt("peopleNum"));
+					queueInfo.setRestName(queueMsg.getString("restName"));
+				}
+				else {
+					//返回无排队的情况 data 传no
+					queueInfo.setHasQueue(false);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 		return queueInfo;
 	}
@@ -573,6 +590,47 @@ public class ConnectServer {
 			e.printStackTrace();
 		}
 		return restList;
+	}
+	/**
+	 * 用户注册
+	 * 
+	 * @param username
+	 * @param phonenum
+	 * @param email
+	 * @param password
+	 * @return
+	 */
+	public User regist(String username, String phonenum, String email, String password) {
+		User user = null;
+		String url = path + "app/register?";
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("username", username);
+		map.put("phonenum", phonenum);
+		map.put("email", email);
+		map.put("password", password);
+
+		try {
+			String str = HttpUtils.postData(url, map);
+			if(str == null)
+				return null;
+			JSONObject obj = new JSONObject(str);
+			user = new User();
+			if ((Boolean) obj.get("success")) {
+				JSONObject userinfo = (JSONObject) obj
+						.getJSONObject("data");
+
+				user.setId(userinfo.getInt("userid"));
+				user.setUsername(userinfo.getString("username"));
+				user.setPassword(userinfo.getString("password"));
+				user.setEmail(userinfo.getString("email"));
+				user.setPhone(userinfo.getString("phonenum"));
+				user.setUserType(userinfo.getString("usertype"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return user;
 	}
 
 }

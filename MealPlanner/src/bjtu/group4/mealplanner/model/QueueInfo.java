@@ -8,6 +8,9 @@ public class QueueInfo {
 	private int seatType;//几人桌
 	private int peopleBefore;// 前面排队的队数
 	private int peopleNum;//就餐人数
+	private String restName;
+	private boolean hasQueue; //标志有没有排队
+	private boolean hasFreeSeat = false;
 
 	public int getUserId() {
 		return userId;
@@ -63,5 +66,29 @@ public class QueueInfo {
 
 	public void setSeatType(int seatType) {
 		this.seatType = seatType;
+	}
+
+	public boolean hasQueue() {
+		return hasQueue;
+	}
+
+	public void setHasQueue(boolean hasQueue) {
+		this.hasQueue = hasQueue;
+	}
+
+	public String getRestName() {
+		return restName;
+	}
+
+	public void setRestName(String restName) {
+		this.restName = restName;
+	}
+
+	public boolean hasFreeSeat() {
+		return hasFreeSeat;
+	}
+
+	public void setHasFreeSeat(boolean hasFreeSeat) {
+		this.hasFreeSeat = hasFreeSeat;
 	}
 }

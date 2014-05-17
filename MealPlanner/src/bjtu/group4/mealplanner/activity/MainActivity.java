@@ -37,6 +37,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		StrictMode.setThreadPolicy(policy);
 		super.onCreate(savedInstanceState);
 		application = (MealApplication) getApplication();
+		setContentView(R.layout.activity_main);
+		fragmentManager = getFragmentManager();  
+		initViews();  
 
 		if (!application.getIsLogin()) {
 			Intent intent = new Intent();
@@ -51,22 +54,21 @@ public class MainActivity extends Activity implements OnClickListener {
 					PushConstants.LOGIN_TYPE_API_KEY, 
 					PushMesgUtils.getMetaValue(MainActivity.this, "api_key"));
 			Log.d("Meal", "after start work at " + Calendar.getInstance().getTimeInMillis());
-			
-			setContentView(R.layout.activity_main);
-			initViews();  
-			fragmentManager = getFragmentManager();  
+
 			setTabSelection(0);
 		}
 		else {
 
-			setContentView(R.layout.activity_main);
-			initViews();  
-			fragmentManager = getFragmentManager();  
 			if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("LineUp")) {
 				eatTime = false;
 				lineUpInfo = this.getIntent().getExtras().getString("lineUpInfo");
 				setTabSelection(2);
-			}else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("EatComing")) {
+			}else if (this.getIntent().getExtras() != null &&( this.getIntent().getExtras().getBoolean("FreeSeat")||
+					this.getIntent().getExtras().getBoolean("HasQueue"))) {
+				eatTime = false;
+				setTabSelection(2);
+			}
+			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("EatComing")) {
 				eatTime = false;
 				lineUpInfo = this.getIntent().getExtras().getString("lineUpInfo");
 				setTabSelection(2);
@@ -88,11 +90,10 @@ public class MainActivity extends Activity implements OnClickListener {
 				Intent intent = new Intent(MainActivity.this, PlanMealActivity.class);
 				startActivity(intent);
 			}
-			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("bindInfo")) {
-				setTabSelection(0);
-				bindPushMesgInfo task = new bindPushMesgInfo();
-				task.execute(application.getUserId(),application.getBaiduUserId(),application.getPushMesgChannelId());
-			}
+			//			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("bindInfo")) {
+			//				bindPushMesgInfo task = new bindPushMesgInfo();
+			//				task.execute(application.getUserId(),application.getBaiduUserId(),application.getPushMesgChannelId());
+			//			}
 			else 
 				setTabSelection(0);  
 		}
@@ -103,6 +104,15 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();  
+	}
+
+	@Override
+	public void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if (intent.getExtras() != null && intent.getExtras().getBoolean("bindInfo")) {
+			bindPushMesgInfo task = new bindPushMesgInfo();
+			task.execute(application.getUserId(),application.getBaiduUserId(),application.getPushMesgChannelId());
+		}
 	}
 
 	@Override
@@ -264,7 +274,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			transaction.hide(userInfoFragment);  
 		}  
 	}
-	
+
 	public String getLineUpInfo() {
 		return lineUpInfo;
 	}

@@ -90,7 +90,11 @@ public class Beam extends Activity {
 					AlertDialog.Builder builder= new AlertDialog.Builder(Beam.this);
 					builder.setTitle("提示")
 					.setIcon(android.R.drawable.ic_dialog_info)
-					.setMessage("请先输入用餐人数哦，亲！").create()
+					.setMessage("请先输入用餐人数哦，亲！").setPositiveButton("是", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					}).setNegativeButton("否", null).create()
 					.show();
 				} else if (Integer.parseInt(numString) > 10) {
 					AlertDialog.Builder builder= new AlertDialog.Builder(Beam.this);
@@ -275,7 +279,17 @@ public class Beam extends Activity {
 			queueInfo = new ConnectServer().sendLineUpRequest(restID,userID,peopleNum);
 
 			if(queueInfo!=null){
-				return new Integer(1);
+				
+				//有空桌子 
+				if (queueInfo.hasFreeSeat()) {
+					return new Integer(2);
+				}//当前有排队状态
+				else if (queueInfo.hasQueue()) {
+					return new Integer(3);
+				}//无空桌子，无排队状态，开始进行排队
+				else {
+					return new Integer(1);
+				}
 			}else{
 				return new Integer(0);
 
@@ -287,14 +301,14 @@ public class Beam extends Activity {
 		protected void onPostExecute(Integer result) {
 			progress.cancel();
 			int response = result.intValue();
+			Intent intent = new Intent();
 			switch(response){
 			case 1:
 				Toast.makeText(Beam.this, "您已经开始排队啦", Toast.LENGTH_LONG).show();
 				//您有5人就餐，为您提供了6人桌，前面还有3位排队6人桌，大约等待2小时
-				String lineUpInfo = "亲O(∩_∩)O，您有"+queueInfo.getPeopleNum()+"就餐，为您提供了"+
+				String lineUpInfo = "亲O(∩_∩)O，您有"+queueInfo.getPeopleNum()+"人到"+rest.getName()+"餐厅就餐，为您提供了"+
 						queueInfo.getSeatType()+"人桌，前面还有"+queueInfo.getPeopleBefore()+"位排队"+
 						queueInfo.getSeatType()+"人桌,请耐心等待(*^__^*)";
-				Intent intent = new Intent();
 				intent.setClass(Beam.this, MainActivity.class);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				intent.putExtra("LineUp", true); 
@@ -302,9 +316,48 @@ public class Beam extends Activity {
 				startActivity(intent);
 				Beam.this.finish();
 				break;
-
+			case 2:// 有空桌子无需排队
+				Toast.makeText(Beam.this, "有空桌子无需排队", Toast.LENGTH_LONG).show();
+				AlertDialog.Builder builder= new AlertDialog.Builder(Beam.this);
+				builder.setTitle("排队提示")
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setMessage("亲O(∩_∩)O，"+rest.getName()+"餐厅有空桌，您无需排队！").setPositiveButton("是", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+					}
+				}).show();
+				intent.setClass(Beam.this, MainActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.putExtra("FreeSeat", true); 
+				startActivity(intent);
+				Beam.this.finish();
+				break;
+			case 3://当前有排队状态
+				Toast.makeText(Beam.this, "之前有排队状态不能排队", Toast.LENGTH_LONG).show();
+				AlertDialog.Builder builder2= new AlertDialog.Builder(Beam.this);
+				builder2.setTitle("排队提示")
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setMessage("亲O(∩_∩)O，您现在就是排队状态哦！不能开始新的排队~").setPositiveButton("是", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+					}
+				}).show();
+				intent.setClass(Beam.this, MainActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.putExtra("HasQueue", true); 
+				startActivity(intent);
+				Beam.this.finish();
+				break;
 			case 0:
 				Toast.makeText(Beam.this, "排队失败", Toast.LENGTH_LONG).show();
+				AlertDialog.Builder builder3= new AlertDialog.Builder(Beam.this);
+				builder3.setTitle("排队提示")
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setMessage("抱歉！亲╭(╯3╰)╮，排队失败！请稍后再试~").setPositiveButton("是", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+					}
+				}).show();
 				break;
 			}
 		}

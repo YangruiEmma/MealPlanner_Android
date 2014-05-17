@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +41,24 @@ public class LineUpFragment extends Fragment  implements OnClickListener {
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		Log.d("排队", "onCreateView");
 		View lineUpView = inflater.inflate(R.layout.fragment_lineup,
 				container, false);
 		fatherActivity = (MainActivity)getActivity();
 		bingViews(lineUpView);
 		application = (MealApplication) getActivity().getApplication();
+		
+		if ("".equals(fatherActivity.getLineUpInfo())) {
+			getRestInfo();
+		}
+		//消息提示-就餐时间提醒
+		else if(fatherActivity.isEatTime()) {
+			lineUpInfoShow(fatherActivity.getLineUpInfo());
+			processEatTime();
+		}
+		else if(!fatherActivity.isEatTime()) {
+			lineUpInfoShow(fatherActivity.getLineUpInfo());
+		}
 		return lineUpView;
 	}
 
@@ -58,22 +72,6 @@ public class LineUpFragment extends Fragment  implements OnClickListener {
 
 		btn_lineUpSee.setOnClickListener(this);
 		btn_lineUpCancel.setOnClickListener(this);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		if ("".equals(fatherActivity.getLineUpInfo())) {
-			getRestInfo();
-		}
-		//消息提示-就餐时间提醒
-		else if(fatherActivity.isEatTime()) {
-			lineUpInfoShow(fatherActivity.getLineUpInfo());
-			processEatTime();
-		}
-		else if(!fatherActivity.isEatTime()) {
-			lineUpInfoShow(fatherActivity.getLineUpInfo());
-		}
 	}
 
 	@Override
@@ -125,16 +123,6 @@ public class LineUpFragment extends Fragment  implements OnClickListener {
 
 	private void getRestInfo() {
 		GetLineUpInfoTask task = new GetLineUpInfoTask();
-		progress = new ProgressDialog(getActivity());
-		progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		progress.setTitle("请稍等");
-		progress.setMessage("正在获取排队信息...");
-		// 设置ProgressDialog 的进度条是否不明确 false 就是不设置为不明确
-		progress.setIndeterminate(false);
-		// 设置ProgressDialog 是否可以按退回键取消
-		progress.setCancelable(true);
-		progress.show();
-
 		//异步获取餐厅信息
 		task.execute(application.getUserId());
 	}
@@ -161,6 +149,7 @@ public class LineUpFragment extends Fragment  implements OnClickListener {
 		}).setNegativeButton("否", null).create()
 		.show();
 	}
+
 	private class GetLineUpInfoTask extends AsyncTask<Object, Integer, Integer>{
 
 		/**
@@ -174,7 +163,7 @@ public class LineUpFragment extends Fragment  implements OnClickListener {
 
 			if(queueInfo!=null){
 				//有排队
-				if (queueInfo.getUserId()!=0)
+				if (queueInfo.hasQueue())
 					return 1;
 				//无排队
 				else 
@@ -187,24 +176,25 @@ public class LineUpFragment extends Fragment  implements OnClickListener {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			progress.cancel();
 			int response = result.intValue();
 			switch(response){
 			case 1:
 				Toast.makeText(getActivity(), "获取排队信息成功，有排队", Toast.LENGTH_LONG).show();
+				//前面无人排队
 				if (queueInfo.getPeopleBefore()==0) {
-					String lineUpInfo = "亲O(∩_∩)O，前面无人排队您可以直接用餐！";
+					String  lineUpInfo= "亲O(∩_∩)O，欢迎到"+queueInfo.getRestName()+"就餐，前面已无人排队您耐心等待，马上便可用餐！";
+					lineUpInfoShow(lineUpInfo);
 					AlertDialog.Builder builder= new AlertDialog.Builder(getActivity());
 					builder.setTitle("排队提示")
 					.setIcon(android.R.drawable.ic_dialog_info)
 					.setMessage(lineUpInfo).setPositiveButton("是", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							noLineUp();
+							
 						}
 					}).show();
 				}else {
-					String lineUpInfo = "亲O(∩_∩)O，您有"+queueInfo.getPeopleNum()+"人就餐，为您提供了"+
+					String lineUpInfo = "亲O(∩_∩)O，您有"+queueInfo.getPeopleNum()+"人到"+queueInfo.getRestName()+"餐厅就餐，为您提供了"+
 							queueInfo.getSeatType()+"人桌，前面还有"+queueInfo.getPeopleBefore()+"位排队"+
 							queueInfo.getSeatType()+"人桌,请耐心等待(*^__^*)";
 					lineUpInfoShow(lineUpInfo);

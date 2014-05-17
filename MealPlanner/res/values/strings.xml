@@ -58,7 +58,7 @@
     <string name="title_activity_regist">注册</string>
     <string name="regist">注                          册</string>
     <string name="namehint">请输入用户名</string>
-    <string name="nickhint">请输入昵称</string>
+    <string name="phonehint">请输入电话</string>
     <string name="emailhint">请输入邮箱</string>
     <string name="pwdhint">请输入密码</string>
     <string name="pwdrehint">请确认密码</string>

@@ -43,10 +43,12 @@ public class PushMessageReceiver  extends FrontiaPushMessageReceiver {
 			PushMesgUtils.setBind(context, true);
 		}
 		application = (MealApplication) context.getApplicationContext();
-		application.setBaiduUserId(userId);
-		application.setPushMesgChannelId(channelId);
-		application.setBind(true);
-		sendPushInfotoServer(context);
+		if (!application.hasBind()) {
+			application.setBaiduUserId(userId);
+			application.setPushMesgChannelId(channelId);
+			application.setBind(true);
+			sendPushInfotoServer(context);
+		}
 		Log.d("Meal", responseString);
 	}
 
@@ -133,7 +135,7 @@ public class PushMessageReceiver  extends FrontiaPushMessageReceiver {
 		Intent intent = new Intent();
 		intent.setClass(context.getApplicationContext(), MainActivity.class);
 		intent.putExtra("bindInfo",true); 
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.getApplicationContext().startActivity(intent);
 
 	}
