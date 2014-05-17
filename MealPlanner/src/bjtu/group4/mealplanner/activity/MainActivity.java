@@ -93,10 +93,9 @@ public class MainActivity extends Activity implements OnClickListener {
 				Intent intent = new Intent(MainActivity.this, AllOrderList.class);
 				startActivity(intent);
 			}
-			if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("RestAll")) {
+			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("RestAll")) {
 				setTabSelection(1);
 			}
-
 			else 
 				setTabSelection(0);  
 		}

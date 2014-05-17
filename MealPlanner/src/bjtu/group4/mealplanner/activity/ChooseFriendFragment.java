@@ -136,7 +136,7 @@ public class ChooseFriendFragment extends ListFragment {
 				break;
 			//失败
 			case 0:
-				Toast.makeText(getActivity(), "网络繁忙", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "您没有好友，无法组饭局", Toast.LENGTH_LONG).show();
 				break;
 			}
 			super.onPostExecute(result);
