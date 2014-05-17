@@ -7,7 +7,7 @@ public class QueueInfo {
 	private int seqNow;//现在正在进行的排队号ID
 	private int seatType;//几人桌
 	private int peopleBefore;// 前面排队的队数
-	private int peopleNum;//该排队中的人数
+	private int peopleNum;//就餐人数
 
 	public int getUserId() {
 		return userId;

@@ -59,18 +59,6 @@ public class Login extends Activity {
 		username.setText(name);
 		password.setText(pass);
 
-		//×Ô¶¯µÇÂ¼´úÂë
-		if(shared.getBoolean("auto", true)){
-
-			application.setIsLogin(true);
-			application.setLoginName(name);
-			application.setLoginPwd(pass);
-			Intent i = new Intent();
-			i.setClass(Login.this, MainActivity.class);
-			startActivity(i);
-			Login.this.finish();
-		}
-
 	}
 
 	private void setListeners() {
