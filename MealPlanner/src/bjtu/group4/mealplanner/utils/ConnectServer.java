@@ -465,11 +465,10 @@ public class ConnectServer {
 						JSONObject friendObj = mealFriends.getJSONObject(j);
 						MealFriend f = new MealFriend();
 						f.setStatus(friendObj.getInt("status"));
-						JSONObject fObj = friendObj.getJSONObject("friendInfo");
-						f.getmFriend().setFriendId(fObj.getInt("userid"));
-						f.getmFriend().setFriendEmail(fObj.getString("email"));
-						f.getmFriend().setFriendNameString(fObj.getString("username"));
-						f.getmFriend().setFriendPhone(fObj.getString("phonenum"));
+						f.getmFriend().setFriendId(friendObj.getInt("userid"));
+						f.getmFriend().setFriendEmail(friendObj.getString("email"));
+						f.getmFriend().setFriendNameString(friendObj.getString("username"));
+						f.getmFriend().setFriendPhone(friendObj.getString("phonenum"));
 
 						friendStatusList.add(f);
 					}

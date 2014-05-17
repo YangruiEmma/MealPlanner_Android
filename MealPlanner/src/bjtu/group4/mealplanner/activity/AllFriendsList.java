@@ -80,6 +80,7 @@ public class AllFriendsList extends Activity implements OnItemClickListener{
 					map.put("title", friend.getFriendNameString());
 					map.put("info", friend.getFriendPhone());
 					map.put("more", "");
+					map.put("img", R.drawable.friends);
 
 					mData.add(map);
 				}

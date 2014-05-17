@@ -65,8 +65,9 @@ public class CustomAdapter extends BaseAdapter {
 		holder.title.setText((String)mData.get(position).get("title"));
 		holder.info.setText((String)mData.get(position).get("info"));
 		holder.more.setText((String)mData.get(position).get("more"));
-		if(mData.get(position).get("img") != null)
-			holder.img.setBackgroundResource((Integer)mData.get(position).get("img"));
+		if(mData.get(position).get("img") != null) {
+			holder.img.setImageResource((Integer)mData.get(position).get("img"));
+		}
 		if(mData.get(position).get("imgStatus") != null) {
 			holder.imgStatus.setVisibility(View.VISIBLE);
 			holder.imgStatus.setBackgroundResource((Integer)mData.get(position).get("imgStatus"));

@@ -36,15 +36,16 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.activity_all_order);
 		super.onCreate(savedInstanceState);
-		
-		bindViewAndSetData();
+		bindView();
 	}
 	
-	private void bindViewAndSetData() {
+	private void bindView() {
 		mData = new ArrayList<Map<String, Object>>();
 		mListView = (ListView)findViewById(R.id.OrderListView);
 		mListView.setOnItemClickListener(this);
-		
+	}
+	
+	private void setData() {
 		GetOrderListTask task = new GetOrderListTask();
 		task.execute();
 		
@@ -57,10 +58,18 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 		progress.show();
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setData();
+	}
+
 	public void onClick(View v) {
-//		Intent intent = new Intent(this, MainActivity.class);
-//		intent.putExtra("RestAll",1);
-//		startActivity(intent);
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		intent.putExtra("RestAll",true);
+		startActivity(intent);
+		AllOrderList.this.finish();
 	}
 	
 	private class GetOrderListTask extends AsyncTask<Object, Integer, Integer> {
@@ -70,6 +79,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 			int userId = SharedData.USERID;
 
 			orderList = new ConnectServer().getOrdersAll(userId);
+			mData.clear();
 			if(orderList.size() != 0) {
 				for(int i = 0; i < orderList.size(); ++i) {
 					Order order = orderList.get(i);
@@ -82,6 +92,7 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 					map.put("title", order.getRestName());
 					map.put("info", dateString);
 					map.put("more", order.getStatusString());
+					map.put("img", R.drawable.orderlist);
 
 					mData.add(map);
 				}
@@ -118,8 +129,6 @@ public class AllOrderList extends Activity implements OnItemClickListener{
 			}
 			super.onPostExecute(result);
 		}
-
-
 	}
 
 	@Override

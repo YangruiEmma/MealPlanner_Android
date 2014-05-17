@@ -79,21 +79,24 @@ public class MainActivity extends Activity implements OnClickListener {
 				setTabSelection(2);
 			}
 			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("Invitation")) {
-				Intent intent = new Intent(MainActivity.this, AllOrderList.class);
+				Intent intent = new Intent(MainActivity.this, AllMealRequestList.class);
 				startActivity(intent);
 			}
 			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("InvitFeedback")) {
-				Intent intent = new Intent(MainActivity.this, PlanMealActivity.class);
+				Intent intent = new Intent(MainActivity.this, AllMealList.class);
 				startActivity(intent);
 			}
 			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("OrderConfirmed")) {
-				Intent intent = new Intent(MainActivity.this, PlanMealActivity.class);
+				Intent intent = new Intent(MainActivity.this, AllOrderList.class);
 				startActivity(intent);
 			}
 			//			else if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("bindInfo")) {
 			//				bindPushMesgInfo task = new bindPushMesgInfo();
 			//				task.execute(application.getUserId(),application.getBaiduUserId(),application.getPushMesgChannelId());
 			//			}
+			if (this.getIntent().getExtras() != null && this.getIntent().getExtras().getBoolean("RestAll")) {
+				setTabSelection(1);
+			}
 			else 
 				setTabSelection(0);  
 		}
@@ -104,6 +107,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();  
+		
 	}
 
 	@Override
@@ -113,6 +117,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			bindPushMesgInfo task = new bindPushMesgInfo();
 			task.execute(application.getUserId(),application.getBaiduUserId(),application.getPushMesgChannelId());
 		}
+		
 	}
 
 	@Override
