@@ -3,6 +3,7 @@ package bjtu.group4.mealplanner.activity;
 import java.util.ArrayList;
 
 import bjtu.group4.mealplanner.R;
+import bjtu.group4.mealplanner.model.Meal;
 import bjtu.group4.mealplanner.model.Restaurant;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -14,7 +15,8 @@ public class OrderActivity extends Activity {
 	private ChooseDishFragment chooseDishFragment;
 	private OrderInfoFragment orderInfoFragment;
 	private final static int contentID = R.id.planMealContent;
-	private Restaurant mRestaurant;
+	private Restaurant mRestaurant = null;
+	private Meal mMeal = null;
 	private ArrayList<Integer> mDishIds = new ArrayList<Integer>();
 	private ArrayList<String> mDishNames = new ArrayList<String>();
 	
@@ -23,7 +25,7 @@ public class OrderActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_planmeal);
 		mRestaurant = (Restaurant)getIntent().getSerializableExtra("restInfo"); 
-		
+		mMeal = (Meal)getIntent().getSerializableExtra("mealInfo");
 		fragmentManager = getFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();  
 		chooseDishFragment = new ChooseDishFragment();
@@ -48,6 +50,10 @@ public class OrderActivity extends Activity {
 	
 	public ArrayList<String> getDishNames() {
 		return mDishNames;
+	}
+	
+	public Meal getMeal() {
+		return mMeal;
 	}
 
 }

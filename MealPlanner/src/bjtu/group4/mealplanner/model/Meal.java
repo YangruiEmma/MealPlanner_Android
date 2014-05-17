@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
+
 public class Meal implements Serializable {
 
 	private static final long serialVersionUID = -5124350915356873375L;
@@ -82,6 +84,8 @@ public class Meal implements Serializable {
 		case SUCCESS:
 			s = "大家都接受了邀请";
 			break;
+		case ORDERED:
+			s = "已下订单";
 		default:
 			break;
 		}
@@ -91,5 +95,6 @@ public class Meal implements Serializable {
 	public static final int ONGOING = 0;
 	public static final int SUCCESS = 1;
 	public static final int EXPIRE = 2;
+	public static final int ORDERED = 3;
 	
 }

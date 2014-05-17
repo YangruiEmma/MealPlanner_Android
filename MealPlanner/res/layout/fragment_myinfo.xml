@@ -39,8 +39,7 @@
                 android:layout_below="@+id/imageViewBack"
                 android:layout_marginLeft="37dp"
                 android:layout_marginTop="14dp"
-                android:layout_toRightOf="@+id/itemStatusImg"
-                android:text="TextView" />
+                android:layout_toRightOf="@+id/itemStatusImg" />
 
             <ImageView
                 android:id="@+id/itemStatusImg"
